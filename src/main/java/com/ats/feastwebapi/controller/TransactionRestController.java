@@ -15,9 +15,13 @@ import com.ats.feastwebapi.model.ErrorMessage;
 import com.ats.feastwebapi.model.LoginProcess;
 import com.ats.feastwebapi.model.Order;
 import com.ats.feastwebapi.model.OrderDetails;
+import com.ats.feastwebapi.model.OrderDetailsList;
+import com.ats.feastwebapi.model.OrderHeaderList;
 import com.ats.feastwebapi.model.TableList;
 import com.ats.feastwebapi.repository.AdminRepository;
 import com.ats.feastwebapi.repository.OrderDetailRepository;
+import com.ats.feastwebapi.repository.OrderDetailsListRepository;
+import com.ats.feastwebapi.repository.OrderHeaderListRepository;
 import com.ats.feastwebapi.repository.OrderRepository;
 import com.ats.feastwebapi.repository.TableListRepository;
 
@@ -31,7 +35,10 @@ public class TransactionRestController {
 	AdminRepository adminRepository;
 	
 	@Autowired
-	OrderRepository orderRepository;
+	OrderHeaderListRepository orderHeaderListRepository;
+	
+	@Autowired
+	OrderDetailsListRepository orderDetailsListRepository;
 
 	@Autowired
 	OrderDetailRepository orderDetailRepository;
@@ -112,17 +119,17 @@ public class TransactionRestController {
 	}
 	
 	@RequestMapping(value = { "/orderListByTableNo" }, method = RequestMethod.POST)
-	public @ResponseBody List<Order> orderListByTableNo(@RequestParam("tableNo") int tableNo) {
+	public @ResponseBody List<OrderHeaderList> orderListByTableNo(@RequestParam("tableNo") int tableNo) {
 
-		List<Order> orders = new ArrayList<Order>();
+		List<OrderHeaderList> orders = new ArrayList<OrderHeaderList>();
 		try {
 
-			orders = orderRepository.findByTableNoAndBillStatusAndDelStatus(tableNo,1,1);
+			orders = orderHeaderListRepository.orderListByTableNo(tableNo);
 			
 			for(int i=0; i<orders.size();i++)
 			{
-				 List<OrderDetails> orderDetails = orderDetailRepository.findByOrderIdAndStatus(orders.get(i).getOrderId(),1);
-				 orders.get(i).setOrderDetailList(orderDetails);
+				 List<OrderDetailsList> orderDetails = orderDetailsListRepository.findByOrderId(orders.get(i).getOrderId());
+				 orders.get(i).setOrderDetailsList(orderDetails);
 			}
 
 		} catch (Exception e) {
