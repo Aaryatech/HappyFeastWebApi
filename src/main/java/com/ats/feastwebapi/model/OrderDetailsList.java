@@ -20,6 +20,9 @@ public class OrderDetailsList {
 	@Column(name = "item_id")
 	private int itemId;
 	
+	@Column(name = "item_name")
+	private String itemName;
+	
 	@Column(name = "quantity")
 	private int quantity;
 	
@@ -110,11 +113,19 @@ public class OrderDetailsList {
 		this.total = total;
 	}
 
+	public String getItemName() {
+		return itemName;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
 	@Override
 	public String toString() {
 		return "OrderDetailsList [orderDetailsId=" + orderDetailsId + ", orderId=" + orderId + ", itemId=" + itemId
-				+ ", quantity=" + quantity + ", rate=" + rate + ", status=" + status + ", isMixer=" + isMixer
-				+ ", remark=" + remark + ", total=" + total + "]";
+				+ ", itemName=" + itemName + ", quantity=" + quantity + ", rate=" + rate + ", status=" + status
+				+ ", isMixer=" + isMixer + ", remark=" + remark + ", total=" + total + "]";
 	}
 	
 	

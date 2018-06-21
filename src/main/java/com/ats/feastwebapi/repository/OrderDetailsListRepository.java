@@ -10,16 +10,20 @@ import com.ats.feastwebapi.model.OrderDetailsList;
 
 public interface OrderDetailsListRepository extends JpaRepository<OrderDetailsList, Integer>{
 
-	@Query(value = "select\r\n" + 
-			"        *,\r\n" + 
-			"         CASE WHEN status = 1 \r\n" + 
-			"                     THEN rate*quantity \r\n" + 
-			"                  ELSE 0 \r\n" + 
-			"             END  total \r\n" + 
+	@Query(value = " select\r\n" + 
+			"        od.*,\r\n" + 
+			"        m.item_name,\r\n" + 
+			"        CASE \r\n" + 
+			"            WHEN \r\n" + 
+			"                status = 1 THEN  rate*quantity \r\n" + 
+			"            ELSE 0 \r\n" + 
+			"        END  total \r\n" + 
 			"    from\r\n" + 
-			"        t_order_details \r\n" + 
+			"        t_order_details od,\r\n" + 
+			"        m_item m\r\n" + 
 			"    where\r\n" + 
-			"        order_id=:orderId", nativeQuery = true)
+			"        od.order_id=:orderId\r\n" + 
+			"        and od.item_id = m.item_id", nativeQuery = true)
 	List<OrderDetailsList> findByOrderId(@Param("orderId")int orderId);
 
 }
