@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "m_order_details")
+@Table(name = "t_order_details")
 public class OrderDetails {
 
 	@Id
@@ -27,6 +27,8 @@ public class OrderDetails {
 	private int status;
 	@Column(name = "is_mixer")
 	private int isMixer;
+	@Column(name = "remark")
+	private String remark;
 
 	public int getOrderDetailsId() {
 		return orderDetailsId;
@@ -84,10 +86,19 @@ public class OrderDetails {
 		this.isMixer = isMixer;
 	}
 
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
 	@Override
 	public String toString() {
 		return "OrderDetails [orderDetailsId=" + orderDetailsId + ", orderId=" + orderId + ", itemId=" + itemId
-				+ ", quantity=" + quantity + ", rate=" + rate + ", status=" + status + ", isMixer=" + isMixer + "]";
+				+ ", quantity=" + quantity + ", rate=" + rate + ", status=" + status + ", isMixer=" + isMixer
+				+ ", remark=" + remark + "]";
 	}
 
 }

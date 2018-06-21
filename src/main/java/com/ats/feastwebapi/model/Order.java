@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name = "m_order")
+@Table(name = "t_order")
 public class Order {
 
 	@Id
