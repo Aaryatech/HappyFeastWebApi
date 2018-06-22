@@ -54,6 +54,8 @@ public class Item {
 	@Column(name = "min_stock")
 	private int minStock;
 
+	private String hsnCode;
+
 	public int getItemId() {
 		return itemId;
 	}
@@ -206,6 +208,14 @@ public class Item {
 		this.minStock = minStock;
 	}
 
+	public String getHsnCode() {
+		return hsnCode;
+	}
+
+	public void setHsonCode(String hsnCode) {
+		this.hsnCode = hsnCode;
+	}
+
 	@Override
 	public String toString() {
 		return "Item [itemId=" + itemId + ", itemName=" + itemName + ", itemDesc=" + itemDesc + ", itemImage="
@@ -213,7 +223,7 @@ public class Item {
 				+ ", openingRate=" + openingRate + ", maxRate=" + maxRate + ", minRate=" + minRate + ", currentStock="
 				+ currentStock + ", catId=" + catId + ", sgst=" + sgst + ", cgst=" + cgst + ", isMixerApplicable="
 				+ isMixerApplicable + ", userId=" + userId + ", updatedDate=" + updatedDate + ", delStatus=" + delStatus
-				+ ", minStock=" + minStock + "]";
+				+ ", minStock=" + minStock + ", hsnCode=" + hsnCode + "]";
 	}
 
 }

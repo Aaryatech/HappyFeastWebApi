@@ -12,27 +12,36 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.feastwebapi.model.BillMonthwise;
+import com.ats.feastwebapi.model.DateItemReport;
 import com.ats.feastwebapi.model.GetBillDatewiseReport;
 import com.ats.feastwebapi.model.GetBillHeader;
 import com.ats.feastwebapi.model.GetItemReport;
 import com.ats.feastwebapi.model.GetOrderCancellation;
 import com.ats.feastwebapi.model.GetTableWiseReport;
+import com.ats.feastwebapi.model.HsnCodeItemwiseReport;
 import com.ats.feastwebapi.model.ItemWiseReport;
+import com.ats.feastwebapi.model.TaxLabwiseReport;
 import com.ats.feastwebapi.repository.BillDetailsRepository;
 import com.ats.feastwebapi.repository.BillMonthwiseRepo;
 import com.ats.feastwebapi.repository.BillRepository;
+import com.ats.feastwebapi.repository.DateItemRepsitory;
 import com.ats.feastwebapi.repository.GetBillDatewiseReportRepo;
 import com.ats.feastwebapi.repository.GetBillHeaderRepo;
 import com.ats.feastwebapi.repository.GetItemReportRepo;
 import com.ats.feastwebapi.repository.GetOrderCancellationRepo;
 import com.ats.feastwebapi.repository.GetTableWiseReportRepo;
+import com.ats.feastwebapi.repository.HsnCodeItemwiseRepository;
 import com.ats.feastwebapi.repository.ItemWiseReportRepo;
+import com.ats.feastwebapi.repository.TaxLabwiseRepository;
 
 @RestController
 public class ReportController {
 
 	@Autowired
 	BillRepository billRepository;
+
+	@Autowired
+	DateItemRepsitory dateItemRepsitory;
 
 	@Autowired
 	GetBillDatewiseReportRepo getBillDatewiseReportRepo;
@@ -58,8 +67,13 @@ public class ReportController {
 	@Autowired
 	ItemWiseReportRepo itemWiseReportRepo;
 
-	@RequestMapping(value = "/getAllBillWiseReport", method = RequestMethod.POST)
-	public @ResponseBody List<GetBillHeader> getAllBillWiseReport(@RequestParam("fromDate") String fromDate,
+	@Autowired
+	TaxLabwiseRepository taxLabwiseRepository;
+	@Autowired
+	HsnCodeItemwiseRepository hsnCodeItemwiseRepository;
+
+	@RequestMapping(value = "/getBillWiseReport", method = RequestMethod.POST)
+	public @ResponseBody List<GetBillHeader> getBillWiseReport(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate) {
 
 		List<GetBillHeader> getBillList;
@@ -81,6 +95,22 @@ public class ReportController {
 		List<GetItemReport> getItemList;
 		try {
 			getItemList = getItemReportRepo.findAllItem(fromDate, toDate);
+		} catch (Exception e) {
+			getItemList = new ArrayList<>();
+			e.printStackTrace();
+
+		}
+		return getItemList;
+
+	}
+
+	@RequestMapping(value = "/getItemCategorywiseReport", method = RequestMethod.POST)
+	public @ResponseBody List<GetItemReport> getItemCategorywiseReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+
+		List<GetItemReport> getItemList;
+		try {
+			getItemList = getItemReportRepo.findAllItemCategorywise(fromDate, toDate);
 		} catch (Exception e) {
 			getItemList = new ArrayList<>();
 			e.printStackTrace();
@@ -167,6 +197,60 @@ public class ReportController {
 
 		}
 		return getItemList;
+
+	}
+
+	@RequestMapping(value = "/getItemhsoncodewiseReport", method = RequestMethod.POST)
+	public @ResponseBody List<HsnCodeItemwiseReport> getItemhsoncodewiseReport(
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+
+		List<HsnCodeItemwiseReport> getItemList;
+		try {
+			getItemList = hsnCodeItemwiseRepository.findHsonCodeReport(fromDate, toDate);
+		} catch (Exception e) {
+			getItemList = new ArrayList<>();
+			e.printStackTrace();
+
+		}
+		return getItemList;
+
+	}
+
+	@RequestMapping(value = "/getTaxLabewiseReport", method = RequestMethod.POST)
+	public @ResponseBody List<TaxLabwiseReport> getTaxLabewiseReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+
+		List<TaxLabwiseReport> getList;
+		try {
+			getList = taxLabwiseRepository.findTaxLabwiseReport(fromDate, toDate);
+		} catch (Exception e) {
+			getList = new ArrayList<>();
+			e.printStackTrace();
+
+		}
+		return getList;
+
+	}
+
+	@RequestMapping(value = "/getDateItemwiseReport", method = RequestMethod.POST)
+	public @ResponseBody List<DateItemReport> getDateItemwiseReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("status") int status,
+			@RequestParam("itemIdList") List<Integer> itemIdList) {
+
+		List<DateItemReport> getList;
+		try {
+
+			if (status == 0) {
+				getList = dateItemRepsitory.findAllItemDateWiseReport(fromDate, toDate);
+			} else {
+				getList = dateItemRepsitory.findItemwiseDateWiseReport(fromDate, toDate, itemIdList);
+			}
+		} catch (Exception e) {
+			getList = new ArrayList<>();
+			e.printStackTrace();
+
+		}
+		return getList;
 
 	}
 
