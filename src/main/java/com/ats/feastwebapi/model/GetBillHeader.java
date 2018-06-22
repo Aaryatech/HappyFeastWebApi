@@ -74,6 +74,8 @@ public class GetBillHeader {
 	public void setBillNo(int billNo) {
 		this.billNo = billNo;
 	}
+	
+	
 
 	public float getPayableAmount() {
 		return payableAmount;
@@ -89,5 +91,9 @@ public class GetBillHeader {
 				+ ", taxableAmount=" + taxableAmount + ", discount=" + discount + ", grandTotal=" + grandTotal
 				+ ", payableAmount=" + payableAmount + "]";
 	}
+
+	
+
+
 
 }
