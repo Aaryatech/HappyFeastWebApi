@@ -1,6 +1,7 @@
 package com.ats.feastwebapi.controller;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ats.feastwebapi.model.Bill;
 import com.ats.feastwebapi.model.BillMonthwise;
 import com.ats.feastwebapi.model.GetBillDatewiseReport;
 import com.ats.feastwebapi.model.GetBillHeader;
@@ -36,7 +36,7 @@ public class ReportController {
 
 	@Autowired
 	GetBillDatewiseReportRepo getBillDatewiseReportRepo;
-	
+
 	@Autowired
 	BillMonthwiseRepo billMonthwiseRepo;
 
@@ -45,7 +45,7 @@ public class ReportController {
 
 	@Autowired
 	GetItemReportRepo getItemReportRepo;
-	
+
 	@Autowired
 	GetBillHeaderRepo getBillHeaderRepo;
 
@@ -54,7 +54,7 @@ public class ReportController {
 
 	@Autowired
 	GetOrderCancellationRepo getOrderCancellationRepo;
-	
+
 	@Autowired
 	ItemWiseReportRepo itemWiseReportRepo;
 
@@ -137,26 +137,26 @@ public class ReportController {
 		return getItemList;
 
 	}
-	
-	@RequestMapping(value = "/getBillMonthWiseReport", method = RequestMethod.POST)
-	public @ResponseBody List<BillMonthwise> getBillMonthWiseReport(
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 
-		List<BillMonthwise> getItemList;
+	@RequestMapping(value = "/getBillMonthWiseReport", method = RequestMethod.POST)
+	public @ResponseBody List<BillMonthwise> getBillMonthWiseReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+
+		List<BillMonthwise> billMonthwise;
 		try {
-			getItemList = billMonthwiseRepo.findMonthwise(fromDate, toDate);
+			billMonthwise = billMonthwiseRepo.findMonthwise(fromDate, toDate);
 		} catch (Exception e) {
-			getItemList = new ArrayList<>();
+			billMonthwise = new ArrayList<>();
 			e.printStackTrace();
 
 		}
-		return getItemList;
+		return billMonthwise;
 
 	}
-	
-	@RequestMapping(value = "/getAllItemwiseReport", method = RequestMethod.POST)
-	public @ResponseBody List<ItemWiseReport> getAllItemwiseReport(
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+
+	@RequestMapping(value = "/getAllItemwiseCanReport", method = RequestMethod.POST)
+	public @ResponseBody List<ItemWiseReport> getAllItemwiseCanReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
 
 		List<ItemWiseReport> getItemList;
 		try {
@@ -169,6 +169,5 @@ public class ReportController {
 		return getItemList;
 
 	}
-
 
 }
