@@ -1,6 +1,7 @@
 package com.ats.feastwebapi.controller;
-
+ 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired; 
@@ -11,14 +12,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.feastwebapi.model.Admin;
+import com.ats.feastwebapi.model.Bill;
+import com.ats.feastwebapi.model.BillDetails;
 import com.ats.feastwebapi.model.ErrorMessage;
-import com.ats.feastwebapi.model.LoginProcess;
-import com.ats.feastwebapi.model.Order;
-import com.ats.feastwebapi.model.OrderDetails;
+import com.ats.feastwebapi.model.Item;
+import com.ats.feastwebapi.model.LoginProcess; 
 import com.ats.feastwebapi.model.OrderDetailsList;
 import com.ats.feastwebapi.model.OrderHeaderList;
 import com.ats.feastwebapi.model.TableList;
 import com.ats.feastwebapi.repository.AdminRepository;
+import com.ats.feastwebapi.repository.BillDetailsRepository;
+import com.ats.feastwebapi.repository.BillRepository;
+import com.ats.feastwebapi.repository.ItemRepository;
 import com.ats.feastwebapi.repository.OrderDetailRepository;
 import com.ats.feastwebapi.repository.OrderDetailsListRepository;
 import com.ats.feastwebapi.repository.OrderHeaderListRepository;
@@ -42,6 +47,18 @@ public class TransactionRestController {
 
 	@Autowired
 	OrderDetailRepository orderDetailRepository;
+	
+	@Autowired
+	ItemRepository itemRepository;
+	
+	@Autowired
+	BillRepository billRepository;
+	
+	@Autowired
+	BillDetailsRepository billDetailsRepository;
+	
+	@Autowired
+	OrderRepository orderRepository;
 	
 	
 	@RequestMapping(value = { "/getFreeTableList" }, method = RequestMethod.GET)
@@ -166,6 +183,118 @@ public class TransactionRestController {
 			e.printStackTrace();
 			errorMessage.setError(true);
 			errorMessage.setMessage(" UnSuccessfully Updated"); 
+
+		}
+		return errorMessage;
+
+	}
+	
+	
+	@RequestMapping(value = { "/generateBill" }, method = RequestMethod.POST)
+	public @ResponseBody ErrorMessage generateBill(@RequestParam("userId") int userId,@RequestParam("discount") float discount,
+			@RequestParam("tableNo") int tableNo) {
+
+		ErrorMessage errorMessage = new ErrorMessage();
+		try {
+			
+			 
+			
+			List<OrderDetailsList> orderDetails = orderDetailsListRepository.getOrderList(tableNo);
+			
+			if(orderDetails.size()>0)
+			{
+				List<Item> itemList = itemRepository.findAllByDelStatus(1); 
+				Bill bill = new Bill(); 
+				List<BillDetails> billDetailsList = new ArrayList<BillDetails>();
+				
+				Bill save = billRepository.save(bill);
+				
+				Date date = new Date();
+				//SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+				
+				 System.out.println("itemList " +itemList);
+				 System.out.println("orderDetails " +orderDetails);
+				 
+				 float grandTotal=0;
+				 float cgst=0;
+				 float sgst=0;
+				 float taxableAmt=0;
+				 float finalTaxAmt=0;
+				 
+				 for(int i = 0; i<orderDetails.size(); i++)
+				 {
+					 for(int j = 0; j<itemList.size() ; j++)
+					 {
+						 if(orderDetails.get(i).getItemId() == itemList.get(j).getItemId())
+						 {
+							 BillDetails billDetails = new BillDetails();
+							 billDetails.setBillId(save.getBillId());
+							 billDetails.setOrderId(orderDetails.get(i).getOrderId());
+							 billDetails.setItemId(orderDetails.get(i).getItemId());
+							 billDetails.setItemName(itemList.get(j).getItemName());
+							 billDetails.setQuantity(orderDetails.get(i).getQuantity());
+							 billDetails.setRate(orderDetails.get(i).getRate());
+							 billDetails.setTotal(orderDetails.get(i).getTotal());  
+							 //float tax = itemList.get(j).getCgst() + itemList.get(j).getSgst();
+							 billDetails.setTaxableAmt(billDetails.getTotal()-((discount/100)*billDetails.getTotal()));  
+							 float cgstAmt = (itemList.get(j).getCgst()/100)*billDetails.getTaxableAmt();
+							 float sgstAmt = (itemList.get(j).getSgst()/100)*billDetails.getTaxableAmt();
+							 
+							 billDetails.setTotalTax(cgstAmt+sgstAmt);
+							 billDetails.setSgst(cgstAmt);
+							 billDetails.setCgst(sgstAmt); 
+							 billDetails.setDelStatus(1);
+							 
+							 grandTotal = grandTotal+billDetails.getTotal();
+							 cgst = cgst+billDetails.getCgst();
+							 sgst = sgst+billDetails.getSgst();
+							 taxableAmt = taxableAmt+billDetails.getTaxableAmt();
+							 finalTaxAmt = finalTaxAmt + billDetails.getTotalTax();
+							 
+							 billDetailsList.add(billDetails);
+							 break;
+						 }
+					 }
+				 }
+				 
+				 save.setBillDate(date);
+				 save.setDelStatus(1);
+				 save.setUserId(userId);
+				 save.setEnterBy(userId);
+				 save.setDiscount(discount);
+				 save.setGrandTotal(grandTotal);
+				 save.setPayableAmt(taxableAmt+finalTaxAmt);
+				 save.setCgst(cgst);
+				 save.setSgst(sgst);
+				 save.setTaxableAmount(taxableAmt);
+				 save.setTableNo(tableNo);
+				 save.setBillDetails(billDetailsList);
+				 
+				 System.out.println(save);
+				 
+				 Bill finalsave = billRepository.save(save); 
+				 List<BillDetails> saveDetail = billDetailsRepository.saveAll(billDetailsList);
+				 
+				 if(finalsave!=null && saveDetail!=null)
+				 {
+					errorMessage.setError(false);
+					errorMessage.setMessage("inserted successfully"); 
+					
+					int update = orderRepository.updateOrderStatus(tableNo);
+					System.out.println(update);
+				 }
+			}
+			else
+			{
+				errorMessage.setError(true);
+				errorMessage.setMessage("faid to insert"); 
+			}
+			 
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			errorMessage.setError(true);
+			errorMessage.setMessage("faid to insert"); 
 
 		}
 		return errorMessage;

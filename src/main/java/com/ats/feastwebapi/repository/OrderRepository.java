@@ -23,4 +23,9 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 	
 	List<Order> findByTableNoAndBillStatusAndDelStatus(int tableNo, int status, int isDelete);
 
+	@Transactional
+	@Modifying
+	@Query("UPDATE Order SET bill_status=2  WHERE table_no=:tableNo")
+	int updateOrderStatus(@Param("tableNo") int tableNo);
+
 }

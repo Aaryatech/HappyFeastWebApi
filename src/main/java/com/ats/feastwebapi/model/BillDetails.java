@@ -22,7 +22,7 @@ public class BillDetails {
 	@Column(name = "del_status")
 	private int delStatus;
 	@Column(name = "item_id")
-	private int item_id;
+	private int itemId;
 	@Column(name = "item_name")
 	private String itemName;
 	@Column(name = "quantity")
@@ -40,8 +40,14 @@ public class BillDetails {
 	@Column(name = "total_tax")
 	private float totalTax;
 
-	public int getItem_id() {
-		return item_id;
+	 
+
+	public int getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
 	}
 
 	public String getItemName() {
@@ -76,9 +82,7 @@ public class BillDetails {
 		return totalTax;
 	}
 
-	public void setItem_id(int item_id) {
-		this.item_id = item_id;
-	}
+	 
 
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
@@ -147,9 +151,11 @@ public class BillDetails {
 	@Override
 	public String toString() {
 		return "BillDetails [billDetailsId=" + billDetailsId + ", billId=" + billId + ", orderId=" + orderId
-				+ ", delStatus=" + delStatus + ", item_id=" + item_id + ", itemName=" + itemName + ", quantity="
+				+ ", delStatus=" + delStatus + ", itemId=" + itemId + ", itemName=" + itemName + ", quantity="
 				+ quantity + ", rate=" + rate + ", sgst=" + sgst + ", cgst=" + cgst + ", total=" + total
 				+ ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax + "]";
 	}
+
+	 
 
 }
