@@ -1,18 +1,15 @@
 package com.ats.feastwebapi.model;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 @Entity
-public class DateItemReport {
+public class GetCategoryReport {
+	
 	@Id
-	private int billDetailsId;
-	private String itemName;
-	private Date billDate;
+	private int billDetailsId; 
+	private String catName; 
+	private int catId;
 	private int quantity;
 	private float total;
 	private float payableAmt;
@@ -22,18 +19,17 @@ public class DateItemReport {
 	public void setBillDetailsId(int billDetailsId) {
 		this.billDetailsId = billDetailsId;
 	}
-	public String getItemName() {
-		return itemName;
+	public String getCatName() {
+		return catName;
 	}
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
+	public void setCatName(String catName) {
+		this.catName = catName;
 	}
-	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
-	public Date getBillDate() {
-		return billDate;
+	public int getCatId() {
+		return catId;
 	}
-	public void setBillDate(Date billDate) {
-		this.billDate = billDate;
+	public void setCatId(int catId) {
+		this.catId = catId;
 	}
 	public int getQuantity() {
 		return quantity;
@@ -55,10 +51,10 @@ public class DateItemReport {
 	}
 	@Override
 	public String toString() {
-		return "DateItemReport [billDetailsId=" + billDetailsId + ", itemName=" + itemName + ", billDate=" + billDate
+		return "GetCategoryReport [billDetailsId=" + billDetailsId + ", catName=" + catName + ", catId=" + catId
 				+ ", quantity=" + quantity + ", total=" + total + ", payableAmt=" + payableAmt + "]";
 	}
-
-	 
+	
+	
 
 }

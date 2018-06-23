@@ -1,18 +1,32 @@
 package com.ats.feastwebapi.model;
-  
+ 
+
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
-public class TaxLabwiseReport {
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+@Entity
+public class BillReportTaxWise {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "bill_details_id")
-	private int billDetailsId; 
+	private int billDetailsId;
+	
+	@Column(name = "bill_id")
+	private int billId;
+	
+	@Column(name = "bill_no")
+	private int billNo;
+	
+	@Column(name = "bill_date")
+	private Date billDate;
 	
 	@Column(name = "tax")
 	private float tax;
@@ -29,6 +43,30 @@ public class TaxLabwiseReport {
 
 	public void setBillDetailsId(int billDetailsId) {
 		this.billDetailsId = billDetailsId;
+	}
+
+	public int getBillId() {
+		return billId;
+	}
+
+	public void setBillId(int billId) {
+		this.billId = billId;
+	}
+
+	public int getBillNo() {
+		return billNo;
+	}
+
+	public void setBillNo(int billNo) {
+		this.billNo = billNo;
+	}
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	public Date getBillDate() {
+		return billDate;
+	}
+
+	public void setBillDate(Date billDate) {
+		this.billDate = billDate;
 	}
 
 	public float getTax() {
@@ -57,11 +95,11 @@ public class TaxLabwiseReport {
 
 	@Override
 	public String toString() {
-		return "TaxLabwiseReport [billDetailsId=" + billDetailsId + ", tax=" + tax + ", taxableAmount=" + taxableAmount
-				+ ", totalTax=" + totalTax + "]";
+		return "BillReportTaxWise [billDetailsId=" + billDetailsId + ", billId=" + billId + ", billNo=" + billNo
+				+ ", billDate=" + billDate + ", tax=" + tax + ", taxableAmount=" + taxableAmount + ", totalTax="
+				+ totalTax + "]";
 	}
 	
 	
- 
 
 }

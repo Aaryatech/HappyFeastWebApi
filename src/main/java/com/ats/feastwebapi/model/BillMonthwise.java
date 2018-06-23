@@ -7,46 +7,53 @@ import javax.persistence.Id;
 public class BillMonthwise {
 	@Id
 	private int billId;
-	private float cgst;
-	private float sgst;
+	private String month; 
 	private float grandTotal;
-
+	private float taxableAmount;
+	private float taxAmt;
+	private float payableAmount;
 	public int getBillId() {
 		return billId;
 	}
-
 	public void setBillId(int billId) {
 		this.billId = billId;
 	}
-
-	public float getCgst() {
-		return cgst;
+	public String getMonth() {
+		return month;
 	}
-
-	public void setCgst(float cgst) {
-		this.cgst = cgst;
+	public void setMonth(String month) {
+		this.month = month;
 	}
-
-	public float getSgst() {
-		return sgst;
-	}
-
-	public void setSgst(float sgst) {
-		this.sgst = sgst;
-	}
-
 	public float getGrandTotal() {
 		return grandTotal;
 	}
-
 	public void setGrandTotal(float grandTotal) {
 		this.grandTotal = grandTotal;
 	}
-
+	public float getTaxableAmount() {
+		return taxableAmount;
+	}
+	public void setTaxableAmount(float taxableAmount) {
+		this.taxableAmount = taxableAmount;
+	}
+	public float getTaxAmt() {
+		return taxAmt;
+	}
+	public void setTaxAmt(float taxAmt) {
+		this.taxAmt = taxAmt;
+	}
+	public float getPayableAmount() {
+		return payableAmount;
+	}
+	public void setPayableAmount(float payableAmount) {
+		this.payableAmount = payableAmount;
+	}
 	@Override
 	public String toString() {
-		return "BillMonthwise [billId=" + billId + ", cgst=" + cgst + ", sgst=" + sgst + ", grandTotal=" + grandTotal
-				+ "]";
+		return "BillMonthwise [billId=" + billId + ", month=" + month + ", grandTotal=" + grandTotal
+				+ ", taxableAmount=" + taxableAmount + ", taxAmt=" + taxAmt + ", payableAmount=" + payableAmount + "]";
 	}
-
+	
+	
+ 
 }

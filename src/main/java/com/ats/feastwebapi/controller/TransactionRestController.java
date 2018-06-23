@@ -20,6 +20,7 @@ import com.ats.feastwebapi.model.LoginProcess;
 import com.ats.feastwebapi.model.OrderDetailsList;
 import com.ats.feastwebapi.model.OrderHeaderList;
 import com.ats.feastwebapi.model.TableList;
+import com.ats.feastwebapi.model.TableSetting;
 import com.ats.feastwebapi.repository.AdminRepository;
 import com.ats.feastwebapi.repository.BillDetailsRepository;
 import com.ats.feastwebapi.repository.BillRepository;
@@ -29,6 +30,7 @@ import com.ats.feastwebapi.repository.OrderDetailsListRepository;
 import com.ats.feastwebapi.repository.OrderHeaderListRepository;
 import com.ats.feastwebapi.repository.OrderRepository;
 import com.ats.feastwebapi.repository.TableListRepository;
+import com.ats.feastwebapi.repository.TableSettingRepository;
 
 @RestController
 public class TransactionRestController {
@@ -59,6 +61,9 @@ public class TransactionRestController {
 	
 	@Autowired
 	OrderRepository orderRepository;
+	
+	@Autowired
+	TableSettingRepository tableSettingRepository;
 	
 	
 	@RequestMapping(value = { "/getFreeTableList" }, method = RequestMethod.GET)
@@ -203,6 +208,8 @@ public class TransactionRestController {
 			
 			if(orderDetails.size()>0)
 			{
+				TableSetting tableSetting = tableSettingRepository.findByBillSettingId(1);
+				
 				List<Item> itemList = itemRepository.findAllByDelStatus(1); 
 				Bill bill = new Bill(); 
 				List<BillDetails> billDetailsList = new ArrayList<BillDetails>();
@@ -269,6 +276,7 @@ public class TransactionRestController {
 				 save.setTaxableAmount(taxableAmt);
 				 save.setTableNo(tableNo);
 				 save.setBillDetails(billDetailsList);
+				 save.setBillNo(tableSetting.getBillNo());
 				 
 				 System.out.println(save);
 				 
@@ -279,7 +287,8 @@ public class TransactionRestController {
 				 {
 					errorMessage.setError(false);
 					errorMessage.setMessage("inserted successfully"); 
-					
+					tableSetting.setBillNo(tableSetting.getBillNo()+1);
+					tableSetting = tableSettingRepository.save(tableSetting);
 					int update = orderRepository.updateOrderStatus(tableNo);
 					System.out.println(update);
 				 }

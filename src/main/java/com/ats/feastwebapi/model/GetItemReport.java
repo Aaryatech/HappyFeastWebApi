@@ -7,15 +7,12 @@ import javax.persistence.Id;
 public class GetItemReport {
 
 	@Id
-	private int billDetailsId;
-
-	private String itemName;
-
-	private int quantity;
-
-	private float rate;
-
+	private int billDetailsId; 
+	private String itemName; 
+	private int quantity; 
+	private float rate; 
 	private float total;
+	private float payableAmt;
 
 	public int getBillDetailsId() {
 		return billDetailsId;
@@ -57,10 +54,18 @@ public class GetItemReport {
 		this.total = total;
 	}
 
+	public float getPayableAmt() {
+		return payableAmt;
+	}
+
+	public void setPayableAmt(float payableAmt) {
+		this.payableAmt = payableAmt;
+	}
+
 	@Override
 	public String toString() {
 		return "GetItemReport [billDetailsId=" + billDetailsId + ", itemName=" + itemName + ", quantity=" + quantity
-				+ ", rate=" + rate + ", total=" + total + "]";
+				+ ", rate=" + rate + ", total=" + total + ", payableAmt=" + payableAmt + "]";
 	}
 
 }

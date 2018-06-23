@@ -10,12 +10,22 @@ import com.ats.feastwebapi.model.GetItemReport;
 
 public interface GetItemReportRepo extends JpaRepository<GetItemReport, Integer> {
 
-	@Query(value = "SELECT t.bill_details_id, t.item_name,t.quantity,t.rate,t.total FROM t_bill_details t,t_bill b"
-			+ " WHERE b.bill_date between :fromDate AND :toDate AND t.del_status=1 AND b.bill_id=t.bill_id", nativeQuery = true)
+	@Query(value = "SELECT\r\n" + 
+			"        t.bill_details_id,\r\n" + 
+			"        t.item_name,\r\n" + 
+			"        sum(t.quantity) as quantity,\r\n" + 
+			"        t.rate,\r\n" + 
+			"        sum(t.total) as total, \r\n" + 
+			"        sum(t.taxable_amount+t.total_tax) as payable_amt\r\n" + 
+			"    FROM\r\n" + 
+			"        t_bill_details t,\r\n" + 
+			"        t_bill b \r\n" + 
+			"    WHERE\r\n" + 
+			"        b.bill_date between :fromDate AND :toDate \r\n" + 
+			"        AND t.del_status=1 \r\n" + 
+			"        AND b.bill_id=t.bill_id\r\n" + 
+			"        group by t.item_id,t.rate", nativeQuery = true)
 	List<GetItemReport> findAllItem(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
-
-	@Query(value = "SELECT t.bill_details_id, t.item_name,t.quantity,t.rate,t.total FROM t_bill_details t,t_bill b,m_item i WHERE b.bill_date between :fromDate AND :toDate"
-			+ " AND t.del_status=1 AND b.bill_id=t.bill_id group by i.cat_id ", nativeQuery = true)
-	List<GetItemReport> findAllItemCategorywise(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+ 
 
 }

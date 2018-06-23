@@ -10,7 +10,20 @@ import com.ats.feastwebapi.model.BillMonthwise;
 
 public interface BillMonthwiseRepo extends JpaRepository<BillMonthwise, Integer> {
 
-	@Query(value = "SELECT b.bill_id, b.cgst,b.sgst,b.grand_total FROM t_bill b WHERE  b.bill_date BETWEEN :fromDate AND :toDate AND b.del_status=1", nativeQuery = true)
+	@Query(value = "SELECT\r\n" + 
+			"        bill_id,\r\n" + 
+			"        monthname(bill_date) as month, \r\n" + 
+			"        sum(grand_total) as grand_total,\r\n" + 
+			"        sum(taxable_amount) as taxable_amount,\r\n" + 
+			"        sum(cgst+sgst) as tax_amt,\r\n" + 
+			"        sum(payable_amount) as payable_amount\r\n" + 
+			"    FROM\r\n" + 
+			"        t_bill \r\n" + 
+			"    WHERE\r\n" + 
+			"        bill_date BETWEEN :fromDate and :toDate\r\n" + 
+			"        AND del_status=1\r\n" + 
+			"    group by\r\n" + 
+			"        month", nativeQuery = true)
 	List<BillMonthwise> findMonthwise(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
 }

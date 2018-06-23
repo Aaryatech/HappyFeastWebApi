@@ -10,10 +10,45 @@ import com.ats.feastwebapi.model.DateItemReport;
 
 public interface DateItemRepsitory extends JpaRepository<DateItemReport, Integer> {
 	
-	@Query(value = "SELECT t.bill_id,t.item_name,b.bill_date,t.quantity,t.total FROM t_bill_details t,t_bill b WHERE  b.bill_date BETWEEN :fromDate AND :toDate AND b.bill_id=t.bill_id AND b.del_status=1 ", nativeQuery = true)
+	@Query(value = "SELECT\r\n" + 
+			"        t.bill_details_id,\r\n" + 
+			"        m.item_name,\r\n" + 
+			"        b.bill_date,\r\n" + 
+			"        sum(t.quantity) as quantity,\r\n" + 
+			"        sum(t.total) as  total,\r\n" + 
+			"        sum(t.taxable_amount +t.total_tax) payable_amt\r\n" + 
+			"    FROM\r\n" + 
+			"        t_bill_details t,\r\n" + 
+			"        t_bill b,\r\n" + 
+			"        m_item m\r\n" + 
+			"    WHERE\r\n" + 
+			"        b.bill_date BETWEEN :fromDate and :toDate\r\n" + 
+			"        AND b.bill_id=t.bill_id \r\n" + 
+			"        AND b.del_status=1\r\n" + 
+			"        and m.item_id = t.item_id\r\n" + 
+			"    group by\r\n" + 
+			"        b.bill_date,t.item_id", nativeQuery = true)
 	List<DateItemReport> findAllItemDateWiseReport(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 	
-	@Query(value = "SELECT t.bill_id,t.item_name,b.bill_date,t.quantity,t.total FROM t_bill_details t,t_bill b WHERE  b.bill_date BETWEEN :fromDate AND :toDate AND b.bill_id=t.bill_id AND b.del_status=1 and t.item_id IN(:itemIdList) ", nativeQuery = true)
+	@Query(value = "SELECT\r\n" + 
+			"        t.bill_details_id,\r\n" + 
+			"        m.item_name,\r\n" + 
+			"        b.bill_date,\r\n" + 
+			"        sum(t.quantity) as quantity,\r\n" + 
+			"        sum(t.total) as  total,\r\n" + 
+			"        sum(t.taxable_amount +t.total_tax) payable_amt\r\n" + 
+			"    FROM\r\n" + 
+			"        t_bill_details t,\r\n" + 
+			"        t_bill b,\r\n" + 
+			"        m_item m\r\n" + 
+			"    WHERE\r\n" + 
+			"        b.bill_date BETWEEN :fromDate and :toDate\r\n" + 
+			"        AND b.bill_id=t.bill_id \r\n" + 
+			"        AND b.del_status=1\r\n" + 
+			"        and m.item_id = t.item_id\r\n" + 
+			"        and t.item_id in (:itemIdList)\r\n" + 
+			"    group by\r\n" + 
+			"        b.bill_date,t.item_id", nativeQuery = true)
 	List<DateItemReport> findItemwiseDateWiseReport(@Param("fromDate") String fromDate, @Param("toDate") String toDate,	@Param("itemIdList") List<Integer> itemIdList);
 
 }

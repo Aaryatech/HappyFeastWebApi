@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.feastwebapi.model.BillMonthwise;
+import com.ats.feastwebapi.model.BillReportTaxWise;
 import com.ats.feastwebapi.model.DateItemReport;
 import com.ats.feastwebapi.model.GetBillDatewiseReport;
 import com.ats.feastwebapi.model.GetBillHeader;
+import com.ats.feastwebapi.model.GetCategoryReport;
 import com.ats.feastwebapi.model.GetItemReport;
 import com.ats.feastwebapi.model.GetOrderCancellation;
 import com.ats.feastwebapi.model.GetTableWiseReport;
@@ -23,10 +25,12 @@ import com.ats.feastwebapi.model.ItemWiseReport;
 import com.ats.feastwebapi.model.TaxLabwiseReport;
 import com.ats.feastwebapi.repository.BillDetailsRepository;
 import com.ats.feastwebapi.repository.BillMonthwiseRepo;
+import com.ats.feastwebapi.repository.BillReportTaxWiseRepository;
 import com.ats.feastwebapi.repository.BillRepository;
 import com.ats.feastwebapi.repository.DateItemRepsitory;
 import com.ats.feastwebapi.repository.GetBillDatewiseReportRepo;
 import com.ats.feastwebapi.repository.GetBillHeaderRepo;
+import com.ats.feastwebapi.repository.GetCategoryReportRepo;
 import com.ats.feastwebapi.repository.GetItemReportRepo;
 import com.ats.feastwebapi.repository.GetOrderCancellationRepo;
 import com.ats.feastwebapi.repository.GetTableWiseReportRepo;
@@ -54,6 +58,9 @@ public class ReportController {
 
 	@Autowired
 	GetItemReportRepo getItemReportRepo;
+	
+	@Autowired
+	GetCategoryReportRepo getCategoryReportRepo;
 
 	@Autowired
 	GetBillHeaderRepo getBillHeaderRepo;
@@ -69,8 +76,12 @@ public class ReportController {
 
 	@Autowired
 	TaxLabwiseRepository taxLabwiseRepository;
+	
 	@Autowired
 	HsnCodeItemwiseRepository hsnCodeItemwiseRepository;
+	
+	@Autowired
+	BillReportTaxWiseRepository billReportTaxWiseRepository;
 
 	@RequestMapping(value = "/getBillWiseReport", method = RequestMethod.POST)
 	public @ResponseBody List<GetBillHeader> getBillWiseReport(@RequestParam("fromDate") String fromDate,
@@ -105,12 +116,12 @@ public class ReportController {
 	}
 
 	@RequestMapping(value = "/getItemCategorywiseReport", method = RequestMethod.POST)
-	public @ResponseBody List<GetItemReport> getItemCategorywiseReport(@RequestParam("fromDate") String fromDate,
+	public @ResponseBody List<GetCategoryReport> getItemCategorywiseReport(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate) {
 
-		List<GetItemReport> getItemList;
+		List<GetCategoryReport> getItemList;
 		try {
-			getItemList = getItemReportRepo.findAllItemCategorywise(fromDate, toDate);
+			getItemList = getCategoryReportRepo.getItemCategorywiseReport(fromDate, toDate);
 		} catch (Exception e) {
 			getItemList = new ArrayList<>();
 			e.printStackTrace();
@@ -251,6 +262,38 @@ public class ReportController {
 
 		}
 		return getList;
+
+	}
+	
+	@RequestMapping(value = "/getDatewiseBillReportGroupByTax", method = RequestMethod.POST)
+	public @ResponseBody List<BillReportTaxWise> getDatewiseBillReportGroupByTax(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+
+		List<BillReportTaxWise> billReportTaxWises = new ArrayList<>();
+		try {
+			billReportTaxWises = billReportTaxWiseRepository.getDatewiseBillReportGroupByTax(fromDate, toDate);
+		} catch (Exception e) {
+			 
+			e.printStackTrace();
+
+		}
+		return billReportTaxWises;
+
+	}
+	
+	@RequestMapping(value = "/getBillwiseBillReportGroupByTax", method = RequestMethod.POST)
+	public @ResponseBody List<BillReportTaxWise> getBillwiseBillReportGroupByTax(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+
+		List<BillReportTaxWise> billReportTaxWises = new ArrayList<>();
+		try {
+			billReportTaxWises = billReportTaxWiseRepository.getBillwiseBillReportGroupByTax(fromDate, toDate);
+		} catch (Exception e) {
+			 
+			e.printStackTrace();
+
+		}
+		return billReportTaxWises;
 
 	}
 
