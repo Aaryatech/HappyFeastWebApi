@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.feastwebapi.model.Admin;
 import com.ats.feastwebapi.model.Category;
+import com.ats.feastwebapi.model.CategoryWithItemList;
 import com.ats.feastwebapi.model.ErrorMessage;
 import com.ats.feastwebapi.model.Item;
 import com.ats.feastwebapi.model.Question;
@@ -21,6 +22,7 @@ import com.ats.feastwebapi.model.TableCat;
 import com.ats.feastwebapi.model.User;
 import com.ats.feastwebapi.repository.AdminRepository;
 import com.ats.feastwebapi.repository.CategoryRepository;
+import com.ats.feastwebapi.repository.CategoryWithItemListRepository;
 import com.ats.feastwebapi.repository.ItemRepository;
 import com.ats.feastwebapi.repository.QuestionRepository;
 import com.ats.feastwebapi.repository.TableBeanRepository;
@@ -50,6 +52,9 @@ public class MasterController {
 
 	@Autowired
 	QuestionRepository questionRepository;
+	
+	@Autowired
+	CategoryWithItemListRepository categoryWithItemListRepository;
 
 	// -----------------ADMIN --------------------
 
@@ -608,6 +613,30 @@ public class MasterController {
 
 		}
 		return errorMessage;
+	}
+	
+	
+	@RequestMapping(value = { "/getAllCategoryWithItemList" }, method = RequestMethod.GET)
+	public @ResponseBody List<CategoryWithItemList> getAllCategoryWithItemList() {
+ 
+		List<CategoryWithItemList> categoryWithItemLists = new ArrayList<CategoryWithItemList>();
+		try {
+
+			categoryWithItemLists = categoryWithItemListRepository.findAllByDelStatus();
+			
+			for(int i=0;i<categoryWithItemLists.size();i++)
+			{
+				List<Item> itemList = itemRepository.findAllByCatIdAndDelStatus(categoryWithItemLists.get(i).getCatId(),1);
+				categoryWithItemLists.get(i).setItemList(itemList);
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return categoryWithItemLists;
+
 	}
 
 }

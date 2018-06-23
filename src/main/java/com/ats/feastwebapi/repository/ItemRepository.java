@@ -21,4 +21,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	@Query("UPDATE Item SET isUsed=0  WHERE item_id=:itemId")
 	int deleteItem(@Param("itemId") int itemId);
 
+	List<Item> findAllByCatIdAndDelStatus(int catId, int isDelete);
+
 }
