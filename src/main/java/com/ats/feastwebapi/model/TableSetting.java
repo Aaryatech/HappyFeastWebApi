@@ -17,7 +17,10 @@ public class TableSetting {
 	private int billSettingId;
 	
 	@Column(name = "bill_no")
-	private int billNo;
+	private String billNo;
+	
+	@Column(name = "venue_id")
+	private int venueId;
 
 	public int getBillSettingId() {
 		return billSettingId;
@@ -26,18 +29,26 @@ public class TableSetting {
 	public void setBillSettingId(int billSettingId) {
 		this.billSettingId = billSettingId;
 	}
-
-	public int getBillNo() {
+ 
+	public String getBillNo() {
 		return billNo;
 	}
 
-	public void setBillNo(int billNo) {
+	public void setBillNo(String billNo) {
 		this.billNo = billNo;
+	}
+
+	public int getVenueId() {
+		return venueId;
+	}
+
+	public void setVenueId(int venueId) {
+		this.venueId = venueId;
 	}
 
 	@Override
 	public String toString() {
-		return "TableSetting [billSettingId=" + billSettingId + ", billNo=" + billNo + "]";
+		return "TableSetting [billSettingId=" + billSettingId + ", billNo=" + billNo + ", venueId=" + venueId + "]";
 	}
 	
 	

@@ -25,6 +25,8 @@ public class Admin {
 	private int delStatus;
 	@Column(name = "token")
 	private String token;
+	@Column(name = "venue_id")
+	private int venueId;
 
 	public int getAdminId() {
 		return adminId;
@@ -74,10 +76,18 @@ public class Admin {
 		this.token = token;
 	}
 
+	public int getVenueId() {
+		return venueId;
+	}
+
+	public void setVenueId(int venueId) {
+		this.venueId = venueId;
+	}
+
 	@Override
 	public String toString() {
 		return "Admin [adminId=" + adminId + ", username=" + username + ", password=" + password + ", type=" + type
-				+ ", delStatus=" + delStatus + ", token=" + token + "]";
+				+ ", delStatus=" + delStatus + ", token=" + token + ", venueId=" + venueId + "]";
 	}
 
 }

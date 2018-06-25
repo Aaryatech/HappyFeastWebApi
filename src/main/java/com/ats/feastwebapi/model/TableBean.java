@@ -1,6 +1,7 @@
 package com.ats.feastwebapi.model;
+ 
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,6 +30,10 @@ public class TableBean {
 	private int userId;
 	@Column(name = "updated_date")
 	private Date updatedDate;
+	
+	@Column(name = "venue_id")
+	private int venueId;
+	
 	public int getTableId() {
 		return tableId;
 	}
@@ -70,6 +75,13 @@ public class TableBean {
 	}
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+	
+	public int getVenueId() {
+		return venueId;
+	}
+	public void setVenueId(int venueId) {
+		this.venueId = venueId;
 	}
 	@Override
 	public String toString() {

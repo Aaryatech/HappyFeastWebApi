@@ -38,8 +38,11 @@ public class Bill {
 	@Column(name = "table_no")
 	private int tableNo;
 	@Column(name = "bill_no")
-	private int billNo;
+	private String billNo;
 
+	@Column(name = "venue_id")
+	private int venueId;
+	
 	private float cgst;
 	private float sgst;
 	private float taxableAmount;
@@ -126,12 +129,12 @@ public class Bill {
 	public void setTableNo(int tableNo) {
 		this.tableNo = tableNo;
 	}
-
-	public int getBillNo() {
+ 
+	public String getBillNo() {
 		return billNo;
 	}
 
-	public void setBillNo(int billNo) {
+	public void setBillNo(String billNo) {
 		this.billNo = billNo;
 	}
 
@@ -167,12 +170,21 @@ public class Bill {
 		this.billDetails = billDetails;
 	}
 
+	public int getVenueId() {
+		return venueId;
+	}
+
+	public void setVenueId(int venueId) {
+		this.venueId = venueId;
+	}
+
 	@Override
 	public String toString() {
 		return "Bill [billId=" + billId + ", billDate=" + billDate + ", delStatus=" + delStatus + ", userId=" + userId
 				+ ", enterBy=" + enterBy + ", billClose=" + billClose + ", discount=" + discount + ", grandTotal="
-				+ grandTotal + ", payableAmt=" + payableAmt + ", tableNo=" + tableNo + ", billNo=" + billNo + ", cgst="
-				+ cgst + ", sgst=" + sgst + ", taxableAmount=" + taxableAmount + ", billDetails=" + billDetails + "]";
+				+ grandTotal + ", payableAmt=" + payableAmt + ", tableNo=" + tableNo + ", billNo=" + billNo
+				+ ", venueId=" + venueId + ", cgst=" + cgst + ", sgst=" + sgst + ", taxableAmount=" + taxableAmount
+				+ ", billDetails=" + billDetails + "]";
 	}
 
 }

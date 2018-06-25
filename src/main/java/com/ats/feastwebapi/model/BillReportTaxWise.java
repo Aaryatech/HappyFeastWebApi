@@ -23,7 +23,7 @@ public class BillReportTaxWise {
 	private int billId;
 	
 	@Column(name = "bill_no")
-	private int billNo;
+	private String billNo;
 	
 	@Column(name = "bill_date")
 	private Date billDate;
@@ -53,11 +53,11 @@ public class BillReportTaxWise {
 		this.billId = billId;
 	}
 
-	public int getBillNo() {
+	public String getBillNo() {
 		return billNo;
 	}
 
-	public void setBillNo(int billNo) {
+	public void setBillNo(String billNo) {
 		this.billNo = billNo;
 	}
 	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")

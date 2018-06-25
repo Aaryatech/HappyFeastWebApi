@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ats.feastwebapi.model.TableSetting;
 
 public interface TableSettingRepository extends JpaRepository<TableSetting, Integer>{
-
-	TableSetting findByBillSettingId(int i);
+ 
+	TableSetting findByVenueId(int venueId);
 
 }

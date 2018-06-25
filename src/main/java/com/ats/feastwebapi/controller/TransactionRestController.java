@@ -197,7 +197,7 @@ public class TransactionRestController {
 	
 	@RequestMapping(value = { "/generateBill" }, method = RequestMethod.POST)
 	public @ResponseBody ErrorMessage generateBill(@RequestParam("userId") int userId,@RequestParam("discount") float discount,
-			@RequestParam("tableNo") int tableNo) {
+			@RequestParam("tableNo") int tableNo, @RequestParam("venueId") int venueId) {
 
 		ErrorMessage errorMessage = new ErrorMessage();
 		try {
@@ -208,8 +208,19 @@ public class TransactionRestController {
 			
 			if(orderDetails.size()>0)
 			{
-				TableSetting tableSetting = tableSettingRepository.findByBillSettingId(1);
+				TableSetting tableSetting = tableSettingRepository.findByVenueId(venueId);
 				
+				if(tableSetting==null)
+				{
+					tableSetting = new TableSetting();
+					if(String.valueOf(venueId).length()==1)
+						tableSetting.setBillNo("0"+venueId+"-00001");
+					else
+						tableSetting.setBillNo(venueId+"-00001");
+					tableSetting.setVenueId(venueId);
+					tableSetting = tableSettingRepository.save(tableSetting);
+				}
+				 
 				List<Item> itemList = itemRepository.findAllByDelStatus(1); 
 				Bill bill = new Bill(); 
 				List<BillDetails> billDetailsList = new ArrayList<BillDetails>();
@@ -277,6 +288,7 @@ public class TransactionRestController {
 				 save.setTableNo(tableNo);
 				 save.setBillDetails(billDetailsList);
 				 save.setBillNo(tableSetting.getBillNo());
+				 save.setVenueId(venueId);
 				 
 				 System.out.println(save);
 				 
@@ -286,9 +298,21 @@ public class TransactionRestController {
 				 if(finalsave!=null && saveDetail!=null)
 				 {
 					errorMessage.setError(false);
-					errorMessage.setMessage("inserted successfully"); 
-					tableSetting.setBillNo(tableSetting.getBillNo()+1);
+					errorMessage.setMessage("inserted successfully");  
+					  
+					String[] splt = tableSetting.getBillNo().split("-");
+					System.out.println(splt);
+					int billNo=Integer.parseInt(splt[1])+1;
+				    String finalBillNo = new String();
+				    
+				    for(int i=0;i<=5-billNo;i++)
+				    	finalBillNo=finalBillNo+"0";
+				    
+				    finalBillNo=finalBillNo+billNo;
+					
+					tableSetting.setBillNo(splt[0]+"-"+finalBillNo);
 					tableSetting = tableSettingRepository.save(tableSetting);
+					 
 					int update = orderRepository.updateOrderStatus(tableNo);
 					System.out.println(update);
 				 }

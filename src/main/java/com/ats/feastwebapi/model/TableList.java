@@ -38,6 +38,9 @@ public class TableList {
 	@Column(name = "updated_date")
 	private Date updatedDate;
 	
+	@Column(name = "venue_id")
+	private int venueId;
+	
 	@Transient
 	private float totalAmt;
 	
@@ -116,11 +119,19 @@ public class TableList {
 		OrderId = orderId;
 	}
 
+	public int getVenueId() {
+		return venueId;
+	}
+
+	public void setVenueId(int venueId) {
+		this.venueId = venueId;
+	}
+
 	@Override
 	public String toString() {
 		return "TableList [tableId=" + tableId + ", tableNo=" + tableNo + ", tableName=" + tableName + ", isDelete="
 				+ isDelete + ", isActive=" + isActive + ", userId=" + userId + ", updatedDate=" + updatedDate
-				+ ", totalAmt=" + totalAmt + ", OrderId=" + OrderId + "]";
+				+ ", venueId=" + venueId + ", totalAmt=" + totalAmt + ", OrderId=" + OrderId + "]";
 	}
 	
 	
