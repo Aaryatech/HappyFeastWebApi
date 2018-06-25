@@ -83,6 +83,23 @@ public class TransactionRestController {
 
 	}
 	
+	@RequestMapping(value = { "/getFreeTableListByVenueId" }, method = RequestMethod.POST)
+	public @ResponseBody List<TableList> getFreeTableListByVenueId(@RequestParam("catId") int catId) {
+
+		List<TableList> tableLists = new ArrayList<TableList>();
+		try {
+
+			tableLists = tableListRepository.getFreeTableListByVenueId(catId);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return tableLists;
+
+	}
+	
 	@RequestMapping(value = { "/getBsyTableList" }, method = RequestMethod.GET)
 	public @ResponseBody List<TableList> getBsyTableList() {
 
@@ -90,6 +107,31 @@ public class TransactionRestController {
 		try {
 
 			tableLists = tableListRepository.getBsyTableList();
+			
+			for(int i=0; i<tableLists.size();i++)
+			{
+				float totalAmt = tableListRepository.getTotalAmtOfTable(tableLists.get(i).getTableNo());
+				int LastKOT = tableListRepository.getLastOrder(tableLists.get(i).getTableNo());
+				tableLists.get(i).setTotalAmt(totalAmt);
+				tableLists.get(i).setOrderId(LastKOT);
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return tableLists;
+
+	}
+	
+	@RequestMapping(value = { "/getBsyTableListByVenueId" }, method = RequestMethod.POST)
+	public @ResponseBody List<TableList> getBsyTableListByVenueId(@RequestParam("catId") int catId) {
+
+		List<TableList> tableLists = new ArrayList<TableList>();
+		try {
+
+			tableLists = tableListRepository.getBsyTableListByVenueId(catId);
 			
 			for(int i=0; i<tableLists.size();i++)
 			{

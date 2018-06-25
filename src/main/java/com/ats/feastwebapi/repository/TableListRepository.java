@@ -25,4 +25,12 @@ public interface TableListRepository extends JpaRepository<TableList, Integer>{
 	@Query(value = "select MAX(order_id) as order_id from t_order where table_no =:tableNo and bill_status =1 and del_status=1", nativeQuery = true)
 	int getLastOrder(@Param("tableNo")int tableNo);
 
+	@Query(value = "SELECT * FROM m_table AS a  WHERE NOT EXISTS ( SELECT *  FROM t_order AS b  WHERE a.table_no=b.table_no  "
+			+ "AND b.bill_status=1  and b.del_status=1  ) and a.is_delete=1 and a.is_active=:catId", nativeQuery = true)
+	List<TableList> getFreeTableListByVenueId(@Param("catId") int catId);
+
+	@Query(value = "SELECT * FROM m_table AS a  WHERE EXISTS ( SELECT *  FROM t_order AS b  WHERE a.table_no=b.table_no  "
+			+ "AND b.bill_status=1  and b.del_status=1  ) and a.is_delete=1 and a.is_active=:catId", nativeQuery = true)
+	List<TableList> getBsyTableListByVenueId(@Param("catId")int catId);
+
 }
