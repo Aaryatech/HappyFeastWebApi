@@ -14,7 +14,7 @@ public interface TableBeanRepository extends JpaRepository<TableBean, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query("UPDATE TableBean SET isUsed=0  WHERE table_id=:tableId")
+	@Query("UPDATE TableBean SET is_delete=0  WHERE table_id=:tableId")
 	int deleteTableBean(@Param("tableId") int tableId);
 
 	List<TableBean> findAllByIsDelete(int i);

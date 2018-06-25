@@ -14,7 +14,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query("UPDATE Question SET isUsed=0  WHERE question_no=:questionNo")
+	@Query("UPDATE Question SET is_used=0  WHERE question_no=:questionNo")
 	int deleteQuestion(@Param("questionNo") int questionNo);
 
 	Question findByQuestionNo(int questionNo);

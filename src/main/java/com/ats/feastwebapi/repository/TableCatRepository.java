@@ -14,7 +14,7 @@ public interface TableCatRepository extends JpaRepository<TableCat, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query("UPDATE TableCat SET isUsed=0  WHERE table_cat_id=:tableCatId")
+	@Query("UPDATE TableCat SET is_active=0  WHERE table_cat_id=:tableCatId")
 	int deleteTableCat(@Param("tableCatId") int tableCatId);
 
 	TableCat findByTableCatId(int tableCatId);

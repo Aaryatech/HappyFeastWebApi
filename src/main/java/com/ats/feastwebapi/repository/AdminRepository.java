@@ -18,7 +18,7 @@ public interface AdminRepository extends JpaRepository<Admin, Integer> {
 	
 	@Transactional
 	@Modifying
-	@Query("UPDATE Admin SET isUsed=0  WHERE admin_id=:adminId")
+	@Query("UPDATE Admin SET del_status=0  WHERE admin_id=:adminId")
 	int deleteAdmin(@Param("adminId") int adminId);
 
 	Admin findByUsernameAndPasswordAndDelStatus(String userName, String pass, int isDelete);

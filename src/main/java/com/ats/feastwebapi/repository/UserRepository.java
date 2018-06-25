@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query("UPDATE User SET isUsed=0  WHERE user_id=:userId")
+	@Query("UPDATE User SET is_used=0  WHERE user_id=:userId")
 	int deleteUser(@Param("userId") int userId);
 
 }
