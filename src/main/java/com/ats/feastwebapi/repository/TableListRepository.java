@@ -18,7 +18,7 @@ public interface TableListRepository extends JpaRepository<TableList, Integer>{
 			+ "and a.is_delete=1 ", nativeQuery = true)
 	List<TableList> getBsyTableList();
 
-	@Query(value = "select sum(od.quantity*od.rate) as total from t_order_details od, t_order o where o.order_id = od.order_id "
+	@Query(value = "select coalesce(sum(od.quantity*od.rate),0) as total from t_order_details od, t_order o where o.order_id = od.order_id "
 			+ "and o.table_no=:tableNo and o.del_status=1 and o.bill_status=1 and od.status=1", nativeQuery = true)
 	float getTotalAmtOfTable(@Param("tableNo") int tableNo);
 
