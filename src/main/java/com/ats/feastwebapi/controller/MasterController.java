@@ -16,6 +16,10 @@ import com.ats.feastwebapi.model.Category;
 import com.ats.feastwebapi.model.CategoryWithItemList;
 import com.ats.feastwebapi.model.ErrorMessage;
 import com.ats.feastwebapi.model.Item;
+import com.ats.feastwebapi.model.Order;
+import com.ats.feastwebapi.model.OrderDetails;
+import com.ats.feastwebapi.model.ParcelOrder;
+import com.ats.feastwebapi.model.ParcelOrderDetails;
 import com.ats.feastwebapi.model.Question;
 import com.ats.feastwebapi.model.TableBean;
 import com.ats.feastwebapi.model.TableCat;
@@ -24,6 +28,8 @@ import com.ats.feastwebapi.repository.AdminRepository;
 import com.ats.feastwebapi.repository.CategoryRepository;
 import com.ats.feastwebapi.repository.CategoryWithItemListRepository;
 import com.ats.feastwebapi.repository.ItemRepository;
+import com.ats.feastwebapi.repository.ParcelOrderDetailsRepository;
+import com.ats.feastwebapi.repository.ParcelOrderRepository;
 import com.ats.feastwebapi.repository.QuestionRepository;
 import com.ats.feastwebapi.repository.TableBeanRepository;
 import com.ats.feastwebapi.repository.TableCatRepository;
@@ -55,6 +61,12 @@ public class MasterController {
 	
 	@Autowired
 	CategoryWithItemListRepository categoryWithItemListRepository;
+	
+	@Autowired
+	ParcelOrderRepository parcelOrderRepository;
+	
+	@Autowired
+	ParcelOrderDetailsRepository parcelOrderDetailsRepository;
 
 	// -----------------ADMIN --------------------
 
@@ -637,6 +649,77 @@ public class MasterController {
 		}
 		return categoryWithItemLists;
 
+	}
+	
+	@RequestMapping(value = { "/saveParcelOrder" }, method = RequestMethod.POST)
+	public @ResponseBody ParcelOrder saveParcelOrder(@RequestBody ParcelOrder parcelOrder) {
+
+		ParcelOrder save = new ParcelOrder();
+		try {
+ 
+			save = parcelOrderRepository.save(parcelOrder);
+
+			for (int i = 0; i < parcelOrder.getParcelOrderDetailsList().size(); i++)
+				parcelOrder.getParcelOrderDetailsList().get(i).setParcelOrderId(save.getParcelOrderId());
+
+			List<ParcelOrderDetails> parcelOrderDetails = parcelOrderDetailsRepository.saveAll(parcelOrder.getParcelOrderDetailsList());
+			save.setParcelOrderDetailsList(parcelOrderDetails);
+   
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return save;
+
+	}
+	
+	@RequestMapping(value = { "/getParcelOrder"}, method = RequestMethod.POST)
+	public @ResponseBody ParcelOrder getParcelOrder(@RequestParam("parcelOrderId") int parcelOrderId) {
+
+		ParcelOrder parcelOrder = new ParcelOrder();
+		try {
+			parcelOrder = parcelOrderRepository.findByParcelOrderId(parcelOrderId);
+			
+			List<ParcelOrderDetails> parcelOrderDetails = parcelOrderDetailsRepository.findByParcelOrderId(parcelOrderId);
+			parcelOrder.setParcelOrderDetailsList(parcelOrderDetails);
+			
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return parcelOrder;
+
+	}
+	
+	
+	@RequestMapping(value = { "/deleteParcelOrder" }, method = RequestMethod.POST)
+	public @ResponseBody ErrorMessage deleteParcelOrder(@RequestParam("parcelOrderId") int parcelOrderId) {
+
+		ErrorMessage errorMessage = new ErrorMessage();
+
+		try {
+			int delete = parcelOrderRepository.deleteparcelOrder(parcelOrderId);
+
+			if (delete == 1) {
+				errorMessage.setError(false);
+				errorMessage.setMessage(" Deleted Successfully");
+			} else {
+				errorMessage.setError(true);
+				errorMessage.setMessage("Deletion Failed");
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			errorMessage.setError(true);
+			errorMessage.setMessage("Deletion Failed :EXC");
+
+		}
+		return errorMessage;
 	}
 
 }
