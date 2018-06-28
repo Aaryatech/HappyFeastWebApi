@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.feastwebapi.model.Admin;
+import com.ats.feastwebapi.model.CancleMessage;
 import com.ats.feastwebapi.model.Category;
 import com.ats.feastwebapi.model.CategoryWithItemList;
 import com.ats.feastwebapi.model.ErrorMessage;
@@ -25,6 +26,7 @@ import com.ats.feastwebapi.model.TableBean;
 import com.ats.feastwebapi.model.TableCat;
 import com.ats.feastwebapi.model.User;
 import com.ats.feastwebapi.repository.AdminRepository;
+import com.ats.feastwebapi.repository.CancleMessageRepository;
 import com.ats.feastwebapi.repository.CategoryRepository;
 import com.ats.feastwebapi.repository.CategoryWithItemListRepository;
 import com.ats.feastwebapi.repository.ItemRepository;
@@ -40,6 +42,9 @@ public class MasterController {
 
 	@Autowired
 	CategoryRepository categoryRepository;
+
+	@Autowired
+	CancleMessageRepository cancleMessageRepository;
 
 	@Autowired
 	TableBeanRepository tableBeanRepository;
@@ -58,13 +63,13 @@ public class MasterController {
 
 	@Autowired
 	QuestionRepository questionRepository;
-	
+
 	@Autowired
 	CategoryWithItemListRepository categoryWithItemListRepository;
-	
+
 	@Autowired
 	ParcelOrderRepository parcelOrderRepository;
-	
+
 	@Autowired
 	ParcelOrderDetailsRepository parcelOrderDetailsRepository;
 
@@ -626,19 +631,18 @@ public class MasterController {
 		}
 		return errorMessage;
 	}
-	
-	
+
 	@RequestMapping(value = { "/getAllCategoryWithItemList" }, method = RequestMethod.GET)
 	public @ResponseBody List<CategoryWithItemList> getAllCategoryWithItemList() {
- 
+
 		List<CategoryWithItemList> categoryWithItemLists = new ArrayList<CategoryWithItemList>();
 		try {
 
 			categoryWithItemLists = categoryWithItemListRepository.findAllByDelStatus();
-			
-			for(int i=0;i<categoryWithItemLists.size();i++)
-			{
-				List<Item> itemList = itemRepository.findAllByCatIdAndDelStatus(categoryWithItemLists.get(i).getCatId(),1);
+
+			for (int i = 0; i < categoryWithItemLists.size(); i++) {
+				List<Item> itemList = itemRepository.findAllByCatIdAndDelStatus(categoryWithItemLists.get(i).getCatId(),
+						1);
 				categoryWithItemLists.get(i).setItemList(itemList);
 			}
 
@@ -650,21 +654,21 @@ public class MasterController {
 		return categoryWithItemLists;
 
 	}
-	
+
 	@RequestMapping(value = { "/saveParcelOrder" }, method = RequestMethod.POST)
 	public @ResponseBody ParcelOrder saveParcelOrder(@RequestBody ParcelOrder parcelOrder) {
 
 		ParcelOrder save = new ParcelOrder();
 		try {
- 
+
 			save = parcelOrderRepository.save(parcelOrder);
 
 			for (int i = 0; i < parcelOrder.getParcelOrderDetailsList().size(); i++)
 				parcelOrder.getParcelOrderDetailsList().get(i).setParcelOrderId(save.getParcelOrderId());
 
-			List<ParcelOrderDetails> parcelOrderDetails = parcelOrderDetailsRepository.saveAll(parcelOrder.getParcelOrderDetailsList());
+			List<ParcelOrderDetails> parcelOrderDetails = parcelOrderDetailsRepository
+					.saveAll(parcelOrder.getParcelOrderDetailsList());
 			save.setParcelOrderDetailsList(parcelOrderDetails);
-   
 
 		} catch (Exception e) {
 
@@ -674,17 +678,17 @@ public class MasterController {
 		return save;
 
 	}
-	
-	@RequestMapping(value = { "/getParcelOrder"}, method = RequestMethod.POST)
+
+	@RequestMapping(value = { "/getParcelOrder" }, method = RequestMethod.POST)
 	public @ResponseBody ParcelOrder getParcelOrder(@RequestParam("parcelOrderId") int parcelOrderId) {
 
 		ParcelOrder parcelOrder = new ParcelOrder();
 		try {
 			parcelOrder = parcelOrderRepository.findByParcelOrderId(parcelOrderId);
-			
-			List<ParcelOrderDetails> parcelOrderDetails = parcelOrderDetailsRepository.findByParcelOrderId(parcelOrderId);
+
+			List<ParcelOrderDetails> parcelOrderDetails = parcelOrderDetailsRepository
+					.findByParcelOrderId(parcelOrderId);
 			parcelOrder.setParcelOrderDetailsList(parcelOrderDetails);
-			
 
 		} catch (Exception e) {
 
@@ -694,8 +698,7 @@ public class MasterController {
 		return parcelOrder;
 
 	}
-	
-	
+
 	@RequestMapping(value = { "/deleteParcelOrder" }, method = RequestMethod.POST)
 	public @ResponseBody ErrorMessage deleteParcelOrder(@RequestParam("parcelOrderId") int parcelOrderId) {
 
@@ -720,6 +723,24 @@ public class MasterController {
 
 		}
 		return errorMessage;
+	}
+
+	@RequestMapping(value = { "/getAllMessage" }, method = RequestMethod.GET)
+	public @ResponseBody List<CancleMessage> getAllMessage() {
+
+		List<CancleMessage> cancleMessage = new ArrayList<CancleMessage>();
+
+		try {
+
+			cancleMessage = cancleMessageRepository.findByDelStatus(1);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return cancleMessage;
+
 	}
 
 }
