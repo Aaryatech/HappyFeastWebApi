@@ -725,6 +725,7 @@ public class MasterController {
 		return errorMessage;
 	}
 
+	// ----------------Cancle Message---------------
 	@RequestMapping(value = { "/getAllMessage" }, method = RequestMethod.GET)
 	public @ResponseBody List<CancleMessage> getAllMessage() {
 
@@ -741,6 +742,66 @@ public class MasterController {
 		}
 		return cancleMessage;
 
+	}
+
+	@RequestMapping(value = { "/saveCancleMessage" }, method = RequestMethod.POST)
+	public @ResponseBody CancleMessage saveCancleMessage(@RequestBody CancleMessage cancleMessage) {
+
+		CancleMessage cancleMessageRes = new CancleMessage();
+
+		try {
+
+			cancleMessageRes = cancleMessageRepository.saveAndFlush(cancleMessage);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return cancleMessageRes;
+
+	}
+
+	@RequestMapping(value = { "/getMessageByMsgId" }, method = RequestMethod.POST)
+	public @ResponseBody CancleMessage getMessageByMsgId(@RequestParam("msgId") int msgId) {
+
+		CancleMessage cancleMessage = null;
+		try {
+			cancleMessage = cancleMessageRepository.findByMsgId(msgId);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return cancleMessage;
+
+	}
+	
+	@RequestMapping(value = { "/deleteCancleMessage" }, method = RequestMethod.POST)
+	public @ResponseBody ErrorMessage deleteCancleMessage(@RequestParam("msgId") int msgId) {
+
+		ErrorMessage errorMessage = new ErrorMessage();
+
+		try {
+			int delete = cancleMessageRepository.deleteCancleMessage(msgId);
+
+			if (delete == 1) {
+				errorMessage.setError(false);
+				errorMessage.setMessage(" Deleted Successfully");
+			} else {
+				errorMessage.setError(true);
+				errorMessage.setMessage("Deletion Failed");
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			errorMessage.setError(true);
+			errorMessage.setMessage("Deletion Failed :EXC");
+
+		}
+		return errorMessage;
 	}
 
 }
