@@ -11,6 +11,7 @@ public class GetBillHeader {
 	@Id
 	private int billId;
 
+	private String billNo;
 	private Date billDate;
 	private float cgst;
 	private float sgst;
@@ -67,8 +68,6 @@ public class GetBillHeader {
 		this.grandTotal = grandTotal;
 	}
 
-	
-
 	public float getPayableAmount() {
 		return payableAmount;
 	}
@@ -85,13 +84,20 @@ public class GetBillHeader {
 		this.billId = billId;
 	}
 
-	@Override
-	public String toString() {
-		return "GetBillHeader [billId=" + billId + ", billDate=" + billDate + ", cgst=" + cgst + ", sgst=" + sgst
-				+ ", taxableAmount=" + taxableAmount + ", discount=" + discount + ", grandTotal=" + grandTotal
-				+ ", payableAmount=" + payableAmount + "]";
+	
+	public String getBillNo() {
+		return billNo;
 	}
 
-	
+	public void setBillNo(String billNo) {
+		this.billNo = billNo;
+	}
+
+	@Override
+	public String toString() {
+		return "GetBillHeader [billId=" + billId + ", billNo=" + billNo + ", billDate=" + billDate + ", cgst=" + cgst
+				+ ", sgst=" + sgst + ", taxableAmount=" + taxableAmount + ", discount=" + discount + ", grandTotal="
+				+ grandTotal + ", payableAmount=" + payableAmount + "]";
+	}
 
 }
