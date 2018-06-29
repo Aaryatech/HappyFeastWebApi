@@ -9,7 +9,7 @@ import javax.persistence.Id;
 public class GetBillHeader {
 
 	@Id
-	private int billNo;
+	private int billId;
 
 	private Date billDate;
 	private float cgst;
@@ -67,14 +67,6 @@ public class GetBillHeader {
 		this.grandTotal = grandTotal;
 	}
 
-	public int getBillNo() {
-		return billNo;
-	}
-
-	public void setBillNo(int billNo) {
-		this.billNo = billNo;
-	}
-	
 	
 
 	public float getPayableAmount() {
@@ -85,15 +77,21 @@ public class GetBillHeader {
 		this.payableAmount = payableAmount;
 	}
 
+	public int getBillId() {
+		return billId;
+	}
+
+	public void setBillId(int billId) {
+		this.billId = billId;
+	}
+
 	@Override
 	public String toString() {
-		return "GetBillHeader [billNo=" + billNo + ", billDate=" + billDate + ", cgst=" + cgst + ", sgst=" + sgst
+		return "GetBillHeader [billId=" + billId + ", billDate=" + billDate + ", cgst=" + cgst + ", sgst=" + sgst
 				+ ", taxableAmount=" + taxableAmount + ", discount=" + discount + ", grandTotal=" + grandTotal
 				+ ", payableAmount=" + payableAmount + "]";
 	}
 
 	
-
-
 
 }

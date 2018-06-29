@@ -58,7 +58,7 @@ public class ReportController {
 
 	@Autowired
 	GetItemReportRepo getItemReportRepo;
-	
+
 	@Autowired
 	GetCategoryReportRepo getCategoryReportRepo;
 
@@ -76,10 +76,10 @@ public class ReportController {
 
 	@Autowired
 	TaxLabwiseRepository taxLabwiseRepository;
-	
+
 	@Autowired
 	HsnCodeItemwiseRepository hsnCodeItemwiseRepository;
-	
+
 	@Autowired
 	BillReportTaxWiseRepository billReportTaxWiseRepository;
 
@@ -264,32 +264,32 @@ public class ReportController {
 		return getList;
 
 	}
-	
+
 	@RequestMapping(value = "/getDatewiseBillReportGroupByTax", method = RequestMethod.POST)
-	public @ResponseBody List<BillReportTaxWise> getDatewiseBillReportGroupByTax(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate) {
+	public @ResponseBody List<BillReportTaxWise> getDatewiseBillReportGroupByTax(
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 
 		List<BillReportTaxWise> billReportTaxWises = new ArrayList<>();
 		try {
 			billReportTaxWises = billReportTaxWiseRepository.getDatewiseBillReportGroupByTax(fromDate, toDate);
 		} catch (Exception e) {
-			 
+
 			e.printStackTrace();
 
 		}
 		return billReportTaxWises;
 
 	}
-	
+
 	@RequestMapping(value = "/getBillwiseBillReportGroupByTax", method = RequestMethod.POST)
-	public @ResponseBody List<BillReportTaxWise> getBillwiseBillReportGroupByTax(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate) {
+	public @ResponseBody List<BillReportTaxWise> getBillwiseBillReportGroupByTax(
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 
 		List<BillReportTaxWise> billReportTaxWises = new ArrayList<>();
 		try {
 			billReportTaxWises = billReportTaxWiseRepository.getBillwiseBillReportGroupByTax(fromDate, toDate);
 		} catch (Exception e) {
-			 
+
 			e.printStackTrace();
 
 		}
