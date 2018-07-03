@@ -17,6 +17,7 @@ import com.ats.feastwebapi.model.Category;
 import com.ats.feastwebapi.model.CategoryWithItemList;
 import com.ats.feastwebapi.model.ErrorMessage;
 import com.ats.feastwebapi.model.Item;
+import com.ats.feastwebapi.model.Offers;
 import com.ats.feastwebapi.model.Order;
 import com.ats.feastwebapi.model.OrderDetails;
 import com.ats.feastwebapi.model.ParcelOrder;
@@ -30,6 +31,7 @@ import com.ats.feastwebapi.repository.CancleMessageRepository;
 import com.ats.feastwebapi.repository.CategoryRepository;
 import com.ats.feastwebapi.repository.CategoryWithItemListRepository;
 import com.ats.feastwebapi.repository.ItemRepository;
+import com.ats.feastwebapi.repository.OffersRepository;
 import com.ats.feastwebapi.repository.ParcelOrderDetailsRepository;
 import com.ats.feastwebapi.repository.ParcelOrderRepository;
 import com.ats.feastwebapi.repository.QuestionRepository;
@@ -42,6 +44,9 @@ public class MasterController {
 
 	@Autowired
 	CategoryRepository categoryRepository;
+
+	@Autowired
+	OffersRepository offersRepository;
 
 	@Autowired
 	CancleMessageRepository cancleMessageRepository;
@@ -777,7 +782,7 @@ public class MasterController {
 		return cancleMessage;
 
 	}
-	
+
 	@RequestMapping(value = { "/deleteCancleMessage" }, method = RequestMethod.POST)
 	public @ResponseBody ErrorMessage deleteCancleMessage(@RequestParam("msgId") int msgId) {
 
@@ -804,4 +809,83 @@ public class MasterController {
 		return errorMessage;
 	}
 
+	// ---------------Offers--------------------------
+
+	@RequestMapping(value = { "/saveOffers" }, method = RequestMethod.POST)
+	public @ResponseBody Offers saveOffers(@RequestBody Offers offers) {
+
+		Offers offersRes = new Offers();
+
+		try {
+
+			offersRes = offersRepository.saveAndFlush(offers);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return offersRes;
+
+	}
+
+	@RequestMapping(value = { "/getAllOffers" }, method = RequestMethod.GET)
+	public @ResponseBody List<Offers> getAllOffers() {
+
+		List<Offers> offers = new ArrayList<Offers>();
+
+		try {
+
+			offers = offersRepository.findByDelStatus(1);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return offers;
+
+	}
+
+	@RequestMapping(value = { "/deleteOffers" }, method = RequestMethod.POST)
+	public @ResponseBody ErrorMessage deleteOffers(@RequestParam("offerId") int offerId) {
+
+		ErrorMessage errorMessage = new ErrorMessage();
+
+		try {
+			int delete = offersRepository.deleteOffers(offerId);
+
+			if (delete == 1) {
+				errorMessage.setError(false);
+				errorMessage.setMessage(" Deleted Successfully");
+			} else {
+				errorMessage.setError(true);
+				errorMessage.setMessage("Deletion Failed");
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			errorMessage.setError(true);
+			errorMessage.setMessage("Deletion Failed :EXC");
+
+		}
+		return errorMessage;
+	}
+
+	@RequestMapping(value = { "/getOffersByOfferId" }, method = RequestMethod.POST)
+	public @ResponseBody Offers getOffersByOfferId(@RequestParam("offerId") int offerId) {
+
+		Offers offers = null;
+		try {
+			offers = offersRepository.findByOfferIdAndDelStatus(offerId, 1);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return offers;
+
+	}
 }
