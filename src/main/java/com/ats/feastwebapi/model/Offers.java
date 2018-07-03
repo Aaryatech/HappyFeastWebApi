@@ -18,14 +18,21 @@ public class Offers {
 
 	private String offerName;
 	private String offerDesc;
-	private int itemId;
+	private String itemId;
 	private int offerIsRunning;
 	private Date fromDate;
 	private Date toDate;
 	private String fromTime;
 	private String toTime;
-	private int rateApplicable;
+	private int offerType;
 	private int delStatus;
+	private int isActive;
+	private int isParsalRegular;
+	private int offerBuyQty;
+	private int offerFreeQty;
+	private float offerPer;
+	private int offerDatewiseDaywise;
+	private String offerDay;
 
 	public int getOfferId() {
 		return offerId;
@@ -51,16 +58,16 @@ public class Offers {
 		this.offerDesc = offerDesc;
 	}
 
-	public int getItemId() {
+	public int getOfferIsRunning() {
+		return offerIsRunning;
+	}
+
+	public String getItemId() {
 		return itemId;
 	}
 
-	public void setItemId(int itemId) {
+	public void setItemId(String itemId) {
 		this.itemId = itemId;
-	}
-
-	public int getOfferIsRunning() {
-		return offerIsRunning;
 	}
 
 	public void setOfferIsRunning(int offerIsRunning) {
@@ -99,12 +106,12 @@ public class Offers {
 		this.toTime = toTime;
 	}
 
-	public int getRateApplicable() {
-		return rateApplicable;
+	public int getOfferType() {
+		return offerType;
 	}
 
-	public void setRateApplicable(int rateApplicable) {
-		this.rateApplicable = rateApplicable;
+	public void setOfferType(int offerType) {
+		this.offerType = offerType;
 	}
 
 	public int getDelStatus() {
@@ -115,12 +122,70 @@ public class Offers {
 		this.delStatus = delStatus;
 	}
 
+	public int getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(int isActive) {
+		this.isActive = isActive;
+	}
+
+	public int getIsParsalRegular() {
+		return isParsalRegular;
+	}
+
+	public void setIsParsalRegular(int isParsalRegular) {
+		this.isParsalRegular = isParsalRegular;
+	}
+
+	public int getOfferBuyQty() {
+		return offerBuyQty;
+	}
+
+	public void setOfferBuyQty(int offerBuyQty) {
+		this.offerBuyQty = offerBuyQty;
+	}
+
+	public int getOfferFreeQty() {
+		return offerFreeQty;
+	}
+
+	public void setOfferFreeQty(int offerFreeQty) {
+		this.offerFreeQty = offerFreeQty;
+	}
+
+	public float getOfferPer() {
+		return offerPer;
+	}
+
+	public void setOfferPer(float offerPer) {
+		this.offerPer = offerPer;
+	}
+
+	public int getOfferDatewiseDaywise() {
+		return offerDatewiseDaywise;
+	}
+
+	public void setOfferDatewiseDaywise(int offerDatewiseDaywise) {
+		this.offerDatewiseDaywise = offerDatewiseDaywise;
+	}
+
+	public String getOfferDay() {
+		return offerDay;
+	}
+
+	public void setOfferDay(String offerDay) {
+		this.offerDay = offerDay;
+	}
+
 	@Override
 	public String toString() {
 		return "Offers [offerId=" + offerId + ", offerName=" + offerName + ", offerDesc=" + offerDesc + ", itemId="
 				+ itemId + ", offerIsRunning=" + offerIsRunning + ", fromDate=" + fromDate + ", toDate=" + toDate
-				+ ", fromTime=" + fromTime + ", toTime=" + toTime + ", rateApplicable=" + rateApplicable
-				+ ", delStatus=" + delStatus + "]";
+				+ ", fromTime=" + fromTime + ", toTime=" + toTime + ", offerType=" + offerType + ", delStatus="
+				+ delStatus + ", isActive=" + isActive + ", isParsalRegular=" + isParsalRegular + ", offerBuyQty="
+				+ offerBuyQty + ", offerFreeQty=" + offerFreeQty + ", offerPer=" + offerPer + ", offerDatewiseDaywise="
+				+ offerDatewiseDaywise + ", offerDay=" + offerDay + "]";
 	}
 
 }

@@ -828,6 +828,10 @@ public class MasterController {
 		return offersRes;
 
 	}
+	
+	
+	
+	
 
 	@RequestMapping(value = { "/getAllOffers" }, method = RequestMethod.GET)
 	public @ResponseBody List<Offers> getAllOffers() {
