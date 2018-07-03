@@ -23,6 +23,7 @@ import com.ats.feastwebapi.model.OrderDetails;
 import com.ats.feastwebapi.model.ParcelOrder;
 import com.ats.feastwebapi.model.ParcelOrderDetails;
 import com.ats.feastwebapi.model.Question;
+import com.ats.feastwebapi.model.Settings;
 import com.ats.feastwebapi.model.TableBean;
 import com.ats.feastwebapi.model.TableCat;
 import com.ats.feastwebapi.model.User;
@@ -35,6 +36,7 @@ import com.ats.feastwebapi.repository.OffersRepository;
 import com.ats.feastwebapi.repository.ParcelOrderDetailsRepository;
 import com.ats.feastwebapi.repository.ParcelOrderRepository;
 import com.ats.feastwebapi.repository.QuestionRepository;
+import com.ats.feastwebapi.repository.SeetingsRepository;
 import com.ats.feastwebapi.repository.TableBeanRepository;
 import com.ats.feastwebapi.repository.TableCatRepository;
 import com.ats.feastwebapi.repository.UserRepository;
@@ -44,6 +46,9 @@ public class MasterController {
 
 	@Autowired
 	CategoryRepository categoryRepository;
+
+	@Autowired
+	SeetingsRepository seetingsRepository;
 
 	@Autowired
 	OffersRepository offersRepository;
@@ -828,10 +833,6 @@ public class MasterController {
 		return offersRes;
 
 	}
-	
-	
-	
-	
 
 	@RequestMapping(value = { "/getAllOffers" }, method = RequestMethod.GET)
 	public @ResponseBody List<Offers> getAllOffers() {
@@ -892,4 +893,61 @@ public class MasterController {
 		return offers;
 
 	}
+
+	// ---------------Settings---------------------------------
+
+	@RequestMapping(value = { "/saveSettings" }, method = RequestMethod.POST)
+	public @ResponseBody Settings saveSettings(@RequestBody Settings settings) {
+
+		Settings settingsRes = new Settings();
+
+		try {
+
+			settingsRes = seetingsRepository.saveAndFlush(settings);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return settingsRes;
+
+	}
+
+	@RequestMapping(value = { "/getAllSettings" }, method = RequestMethod.GET)
+	public @ResponseBody List<Settings> getAllSettings() {
+
+		List<Settings> settings = new ArrayList<Settings>();
+
+		try {
+
+			settings = seetingsRepository.findAll();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return settings;
+
+	}
+	
+	@RequestMapping(value = { "/getSettingById" }, method = RequestMethod.POST)
+	public @ResponseBody Settings getSettingById(@RequestParam("id") int id) {
+
+		Settings settings = new Settings();
+
+		try {
+
+			settings = seetingsRepository.findById(id);
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return settings;
+
+	}
+
 }
