@@ -1,13 +1,12 @@
 package com.ats.feastwebapi.controller;
  
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +18,8 @@ import com.ats.feastwebapi.model.Bill;
 import com.ats.feastwebapi.model.BillDetails;
 import com.ats.feastwebapi.model.ErrorMessage;
 import com.ats.feastwebapi.model.Item;
+import com.ats.feastwebapi.model.ItemWithOffer;
+import com.ats.feastwebapi.model.ItemWithOfferDaywise;
 import com.ats.feastwebapi.model.LoginProcess; 
 import com.ats.feastwebapi.model.OrderDetailsList;
 import com.ats.feastwebapi.model.OrderHeaderList;
@@ -30,6 +31,8 @@ import com.ats.feastwebapi.repository.AdminRepository;
 import com.ats.feastwebapi.repository.BillDetailsRepository;
 import com.ats.feastwebapi.repository.BillRepository;
 import com.ats.feastwebapi.repository.ItemRepository;
+import com.ats.feastwebapi.repository.ItemWithOfferDaywiseRepository;
+import com.ats.feastwebapi.repository.ItemWithOfferRepository;
 import com.ats.feastwebapi.repository.OrderDetailRepository;
 import com.ats.feastwebapi.repository.OrderDetailsListRepository;
 import com.ats.feastwebapi.repository.OrderHeaderListRepository;
@@ -77,6 +80,12 @@ public class TransactionRestController {
 	
 	@Autowired
 	ParcelOrderDetailsRepository parcelOrderDetailsRepository;
+	
+	@Autowired
+	ItemWithOfferRepository itemWithOfferRepository;
+	
+	@Autowired
+	ItemWithOfferDaywiseRepository itemWithOfferDaywiseRepository;
 	
 	
 	@RequestMapping(value = { "/getFreeTableList" }, method = RequestMethod.GET)
@@ -294,7 +303,7 @@ public class TransactionRestController {
 				 float taxableAmt=0;
 				 float finalTaxAmt=0;
 				 
-				 for(int i = 0; i<orderDetails.size(); i++)
+				 /*for(int i = 0; i<orderDetails.size(); i++)
 				 {
 					 for(int j = 0; j<itemList.size() ; j++)
 					 {
@@ -319,6 +328,48 @@ public class TransactionRestController {
 							 billDetails.setDelStatus(1);
 							 
 							 grandTotal = grandTotal+billDetails.getTotal();
+							 cgst = cgst+billDetails.getCgst();
+							 sgst = sgst+billDetails.getSgst();
+							 taxableAmt = taxableAmt+billDetails.getTaxableAmt();
+							 finalTaxAmt = finalTaxAmt + billDetails.getTotalTax();
+							 
+							 billDetailsList.add(billDetails);
+							 break;
+						 }
+					 }
+				 }*/
+				 
+				 
+				 for(int i = 0; i<orderDetails.size(); i++)
+				 {
+					 for(int j = 0; j<itemList.size() ; j++)
+					 {
+						 if(orderDetails.get(i).getItemId() == itemList.get(j).getItemId())
+						 {
+							 BillDetails billDetails = new BillDetails();
+							 billDetails.setBillId(save.getBillId());
+							 billDetails.setOrderId(orderDetails.get(i).getOrderId());
+							 billDetails.setItemId(orderDetails.get(i).getItemId());
+							 billDetails.setItemName(itemList.get(j).getItemName());
+							 billDetails.setQuantity(orderDetails.get(i).getQuantity());
+							 billDetails.setRate(orderDetails.get(i).getRate());
+							 
+							 
+							 float baseRate = ((billDetails.getRate()*100)/((itemList.get(j).getCgst()+itemList.get(j).getSgst())+100));
+							 float value = baseRate*billDetails.getQuantity();
+							 billDetails.setTaxableAmt(value-((discount/100)*value));
+							 float cgstAmt = (itemList.get(j).getCgst()/100)*billDetails.getTaxableAmt();
+							 float sgstAmt = (itemList.get(j).getSgst()/100)*billDetails.getTaxableAmt();
+							 
+							 billDetails.setTotalTax(cgstAmt+sgstAmt);
+							 billDetails.setSgst(cgstAmt);
+							 billDetails.setCgst(sgstAmt);
+							 billDetails.setTotal(billDetails.getTaxableAmt()+cgstAmt+sgstAmt);  
+							 //float tax = itemList.get(j).getCgst() + itemList.get(j).getSgst();
+							    
+							 billDetails.setDelStatus(1);
+							 
+							 grandTotal = grandTotal+orderDetails.get(i).getTotal();
 							 cgst = cgst+billDetails.getCgst();
 							 sgst = sgst+billDetails.getSgst();
 							 taxableAmt = taxableAmt+billDetails.getTaxableAmt();
@@ -433,7 +484,7 @@ public class TransactionRestController {
 				 float taxableAmt=0;
 				 float finalTaxAmt=0;
 				 
-				 for(int i = 0; i<parcelOrderDetails.size(); i++)
+				 /*for(int i = 0; i<parcelOrderDetails.size(); i++)
 				 {
 					 for(int j = 0; j<itemList.size() ; j++)
 					 {
@@ -458,6 +509,46 @@ public class TransactionRestController {
 							 billDetails.setDelStatus(1);
 							 
 							 grandTotal = grandTotal+billDetails.getTotal();
+							 cgst = cgst+billDetails.getCgst();
+							 sgst = sgst+billDetails.getSgst();
+							 taxableAmt = taxableAmt+billDetails.getTaxableAmt();
+							 finalTaxAmt = finalTaxAmt + billDetails.getTotalTax();
+							 
+							 billDetailsList.add(billDetails);
+							 break;
+						 }
+					 }
+				 }*/
+				 
+				 for(int i = 0; i<parcelOrderDetails.size(); i++)
+				 {
+					 for(int j = 0; j<itemList.size() ; j++)
+					 {
+						 if(parcelOrderDetails.get(i).getItemId() == itemList.get(j).getItemId())
+						 {
+							 BillDetails billDetails = new BillDetails();
+							 billDetails.setBillId(save.getBillId());
+							 billDetails.setOrderId(parcelOrderDetails.get(i).getParcelOrderId());
+							 billDetails.setItemId(parcelOrderDetails.get(i).getItemId());
+							 billDetails.setItemName(itemList.get(j).getItemName());
+							 billDetails.setQuantity(parcelOrderDetails.get(i).getQuantity());
+							 billDetails.setRate(parcelOrderDetails.get(i).getRate());
+							 
+							 float baseRate = ((billDetails.getRate()*100)/((itemList.get(j).getCgst()+itemList.get(j).getSgst())+100));
+							 float value = baseRate*billDetails.getQuantity();
+							 billDetails.setTaxableAmt(value-((discount/100)*value));
+							 float cgstAmt = (itemList.get(j).getCgst()/100)*billDetails.getTaxableAmt();
+							 float sgstAmt = (itemList.get(j).getSgst()/100)*billDetails.getTaxableAmt();
+							 
+							 billDetails.setTotalTax(cgstAmt+sgstAmt);
+							 billDetails.setSgst(cgstAmt);
+							 billDetails.setCgst(sgstAmt);
+							 billDetails.setTotal(billDetails.getTaxableAmt()+cgstAmt+sgstAmt);  
+							 //float tax = itemList.get(j).getCgst() + itemList.get(j).getSgst(); 
+							 
+							 billDetails.setDelStatus(1);
+							 
+							 grandTotal = grandTotal+(parcelOrderDetails.get(i).getRate()*parcelOrderDetails.get(i).getQuantity());
 							 cgst = cgst+billDetails.getCgst();
 							 sgst = sgst+billDetails.getSgst();
 							 taxableAmt = taxableAmt+billDetails.getTaxableAmt();
@@ -527,6 +618,103 @@ public class TransactionRestController {
 
 		}
 		return errorMessage;
+
+	}
+	
+	@RequestMapping(value = { "/getItemListWithOfferScheme" }, method = RequestMethod.POST)
+	public @ResponseBody List<ItemWithOffer> getItemListWithOfferScheme(@RequestParam("status") String status) {
+
+		List<ItemWithOfferDaywise> dayWiseList = new ArrayList<>();
+		List<ItemWithOffer> dateWiseList = new ArrayList<>();
+		//List<ItemWithOffer> finalList = new ArrayList<>();
+		
+		Date now = new Date();
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+       /* SimpleDateFormat simpleDateformat = new SimpleDateFormat("E"); // the day of the week abbreviated
+        System.out.println(simpleDateformat.format(now));
+ 
+        simpleDateformat = new SimpleDateFormat("EEEE"); // the day of the week spelled out completely
+        System.out.println(simpleDateformat.format(now));*/
+ 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now); 
+        int day=calendar.get(Calendar.DAY_OF_WEEK);
+        String date = sf.format(now);
+        
+        System.out.println(day);
+        System.out.println(date);
+        
+		try {
+
+			int id = itemWithOfferRepository.getRegularId();
+			System.out.println(id);
+			
+			 if(id==1)
+			 {
+				 dayWiseList=itemWithOfferDaywiseRepository.getDataWithRegularRateDayWise(status,day);
+				 dateWiseList=itemWithOfferRepository.getDataWithRegularRateDateWise(status,date);
+			 }
+			 else if(id==2)
+			 {
+				 dayWiseList=itemWithOfferDaywiseRepository.getDataWithSpecialRateDayWise(status,day);
+				 dateWiseList=itemWithOfferRepository.getDataWithSpecialRateDateWise(status,date);
+			 }
+			 else if(id==3)
+			 {
+				 dayWiseList=itemWithOfferDaywiseRepository.getDataWithGameRateDayWise(status,day);
+				 dateWiseList=itemWithOfferRepository.getDataWithGameRateDateWise(status,date);
+			 }
+			 
+			 System.out.println("dayWiseList" + dayWiseList);
+			 System.out.println("dateWiseList" + dateWiseList);
+			 
+			 /*for(int i = 0 ; i<dateWiseList.size();i++)
+			 {
+				 for(int j = 0 ; j<dayWiseList.size();j++)
+				 {
+					 if(dateWiseList.get(i).getItemId()==dayWiseList.get(j).getItemId() && dayWiseList.get(j).getOfferId()!=0 
+							 && dayWiseList.get(j).getOfferId()>dateWiseList.get(i).getOfferId())
+					 {
+						 dateWiseList.get(i).setOfferId(dayWiseList.get(j).getOfferId());
+						 dateWiseList.get(i).setOfferName(dayWiseList.get(j).getOfferName());
+						 dateWiseList.get(i).setOfferDesc(dayWiseList.get(j).getOfferDesc());
+						 dateWiseList.get(i).setOfferType(dayWiseList.get(j).getOfferType());
+						 dateWiseList.get(i).setOfferBuyQty(dayWiseList.get(j).getOfferBuyQty());
+						 dateWiseList.get(i).setOfferFreeQty(dayWiseList.get(j).getOfferFreeQty());
+						 dateWiseList.get(i).setOfferPer(dayWiseList.get(j).getOfferPer());
+						 dateWiseList.get(i).setOfferDatewiseDaywise(dayWiseList.get(j).getOfferDatewiseDaywise()); 
+						 break;
+					 }
+				 }
+			 }*/
+			 
+			 for(int i = 0 ; i<dateWiseList.size();i++)
+			 {
+				 for(int j = 0 ; j<dayWiseList.size();j++)
+				 {
+					 if(dateWiseList.get(i).getItemId()==dayWiseList.get(j).getItemId() && dateWiseList.get(i).getOfferId()==0 
+							 && dayWiseList.get(j).getOfferId()>dateWiseList.get(i).getOfferId())
+					 {
+						 dateWiseList.get(i).setOfferId(dayWiseList.get(j).getOfferId());
+						 dateWiseList.get(i).setOfferName(dayWiseList.get(j).getOfferName());
+						 dateWiseList.get(i).setOfferDesc(dayWiseList.get(j).getOfferDesc());
+						 dateWiseList.get(i).setOfferType(dayWiseList.get(j).getOfferType());
+						 dateWiseList.get(i).setOfferBuyQty(dayWiseList.get(j).getOfferBuyQty());
+						 dateWiseList.get(i).setOfferFreeQty(dayWiseList.get(j).getOfferFreeQty());
+						 dateWiseList.get(i).setOfferPer(dayWiseList.get(j).getOfferPer());
+						 dateWiseList.get(i).setOfferDatewiseDaywise(dayWiseList.get(j).getOfferDatewiseDaywise()); 
+						 break;
+					 }
+				 }
+			 }
+			 
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			 
+
+		}
+		return dateWiseList;
 
 	}
 
