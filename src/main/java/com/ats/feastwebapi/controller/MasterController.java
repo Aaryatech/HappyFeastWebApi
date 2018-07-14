@@ -16,6 +16,7 @@ import com.ats.feastwebapi.model.CancleMessage;
 import com.ats.feastwebapi.model.Category;
 import com.ats.feastwebapi.model.CategoryWithItemList;
 import com.ats.feastwebapi.model.ErrorMessage;
+import com.ats.feastwebapi.model.GetCatInfo;
 import com.ats.feastwebapi.model.Item;
 import com.ats.feastwebapi.model.Offers;
 import com.ats.feastwebapi.model.Order;
@@ -31,6 +32,7 @@ import com.ats.feastwebapi.repository.AdminRepository;
 import com.ats.feastwebapi.repository.CancleMessageRepository;
 import com.ats.feastwebapi.repository.CategoryRepository;
 import com.ats.feastwebapi.repository.CategoryWithItemListRepository;
+import com.ats.feastwebapi.repository.GetCatInfoRepo;
 import com.ats.feastwebapi.repository.ItemRepository;
 import com.ats.feastwebapi.repository.OffersRepository;
 import com.ats.feastwebapi.repository.ParcelOrderDetailsRepository;
@@ -46,6 +48,9 @@ public class MasterController {
 
 	@Autowired
 	CategoryRepository categoryRepository;
+
+	@Autowired
+	GetCatInfoRepo getCatInfoRepo;
 
 	@Autowired
 	SeetingsRepository seetingsRepository;
@@ -206,7 +211,7 @@ public class MasterController {
 
 		try {
 
-			itemList = itemRepository.findAllByDelStatus(1);
+			itemList = itemRepository.findAllByDelStatusOrderByCatId(1);
 
 		} catch (Exception e) {
 
@@ -931,7 +936,7 @@ public class MasterController {
 		return settings;
 
 	}
-	
+
 	@RequestMapping(value = { "/getSettingById" }, method = RequestMethod.POST)
 	public @ResponseBody Settings getSettingById(@RequestParam("id") int id) {
 
@@ -947,6 +952,24 @@ public class MasterController {
 
 		}
 		return settings;
+
+	}
+
+	@RequestMapping(value = { "/getCategoryInfo" }, method = RequestMethod.GET)
+	public @ResponseBody List<GetCatInfo> getCategoryInfo() {
+
+		List<GetCatInfo> getCatInfoList = new ArrayList<GetCatInfo>();
+
+		try {
+
+			getCatInfoList = getCatInfoRepo.getCategoryInformantion();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return getCatInfoList;
 
 	}
 
