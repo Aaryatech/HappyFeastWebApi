@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.ats.feastwebapi.model.ErrorMessage;
 import com.ats.feastwebapi.model.Order;
 import com.ats.feastwebapi.model.OrderDetails;
@@ -31,7 +30,7 @@ public class OrderController {
 
 	@Autowired
 	OrderListRepository orderListRepository;
-	
+
 	// -----------------Order --------------------
 
 	@RequestMapping(value = { "/saveOrder" }, method = RequestMethod.POST)
@@ -44,14 +43,17 @@ public class OrderController {
 
 			orderRes = orderRepository.saveAndFlush(order);
 
-			for (int i = 0; i <= orderRes.getOrderDetailList().size(); i++) {
+			System.out.println("BEAN : -------------------" + order.getOrderDetailList());
+			for (int i = 0; i < order.getOrderDetailList().size(); i++) {
 
 				orderRes.getOrderDetailList().get(i).setOrderId(orderRes.getOrderId());
 
-				OrderDetails orderDetailRes = orderDetailRepository.saveAndFlush(orderRes.getOrderDetailList().get(i));
-				orderDetailList.add(orderDetailRes);
+				/*OrderDetails orderDetailRes = orderDetailRepository.saveAndFlush(orderRes.getOrderDetailList().get(i));*/
+				/*orderDetailList.add(orderDetailRes);*/
 
 			}
+			orderDetailList = orderDetailRepository.saveAll(order.getOrderDetailList());
+			
 			orderRes.setOrderDetailList(orderDetailList);
 
 		} catch (Exception e) {
@@ -138,10 +140,10 @@ public class OrderController {
 		}
 		return errorMessage;
 	}
-	
-	
+
 	@RequestMapping(value = { "/getOrderDetailByOrderDetailId" }, method = RequestMethod.POST)
-	public @ResponseBody OrderDetails getOrderDetailByOrderDetailId(@RequestParam("orderDetailsId") int orderDetailsId) {
+	public @ResponseBody OrderDetails getOrderDetailByOrderDetailId(
+			@RequestParam("orderDetailsId") int orderDetailsId) {
 
 		OrderDetails order = null;
 		try {
@@ -174,8 +176,6 @@ public class OrderController {
 
 	}
 
-	
-	
 	@RequestMapping(value = { "/deleteOrderDetail" }, method = RequestMethod.POST)
 	public @ResponseBody ErrorMessage deleteOrderDetail(@RequestParam("orderDetailsId") int orderDetailsId) {
 

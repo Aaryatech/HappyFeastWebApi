@@ -1,9 +1,12 @@
 package com.ats.feastwebapi.model;
+ 
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class GetBillHeader {
@@ -19,7 +22,8 @@ public class GetBillHeader {
 	private float discount;
 	private float grandTotal;
 	private float payableAmount;
-
+	
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getBillDate() {
 		return billDate;
 	}
