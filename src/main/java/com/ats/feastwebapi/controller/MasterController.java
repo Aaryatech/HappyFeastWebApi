@@ -973,4 +973,22 @@ public class MasterController {
 
 	}
 
+	@RequestMapping(value = { "/getAllItem" }, method = RequestMethod.GET)
+	public @ResponseBody List<Item> getAllItem() {
+
+		List<Item> itemList = new ArrayList<Item>();
+
+		try {
+
+			itemList = itemRepository.findAllItem();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		return itemList;
+
+	}
+
 }
