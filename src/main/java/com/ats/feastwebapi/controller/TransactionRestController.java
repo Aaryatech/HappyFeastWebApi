@@ -404,7 +404,7 @@ public class TransactionRestController {
 				 if(finalsave!=null && saveDetail!=null)
 				 {
 					errorMessage.setError(false);
-					errorMessage.setMessage("inserted successfully");  
+					errorMessage.setMessage(save.getBillNo());  
 					  
 					String[] splt = tableSetting.getBillNo().split("-");
 					System.out.println(splt);
@@ -583,8 +583,7 @@ public class TransactionRestController {
 				 if(finalsave!=null && saveDetail!=null)
 				 {
 					errorMessage.setError(false);
-					errorMessage.setMessage("inserted successfully");  
-					  
+					errorMessage.setMessage(save.getBillNo());   
 					String[] splt = tableSetting.getBillNo().split("-");
 					System.out.println(splt);
 					int billNo=Integer.parseInt(splt[1])+1;
