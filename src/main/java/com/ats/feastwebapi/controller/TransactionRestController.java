@@ -6,7 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import com.ats.feastwebapi.model.Admin;
 import com.ats.feastwebapi.model.Bill;
 import com.ats.feastwebapi.model.BillDetails;
 import com.ats.feastwebapi.model.ErrorMessage;
+import com.ats.feastwebapi.model.GetBill;
 import com.ats.feastwebapi.model.Item;
 import com.ats.feastwebapi.model.ItemWithOffer;
 import com.ats.feastwebapi.model.ItemWithOfferDaywise;
@@ -30,6 +32,7 @@ import com.ats.feastwebapi.model.TableSetting;
 import com.ats.feastwebapi.repository.AdminRepository;
 import com.ats.feastwebapi.repository.BillDetailsRepository;
 import com.ats.feastwebapi.repository.BillRepository;
+import com.ats.feastwebapi.repository.GetBillRepository;
 import com.ats.feastwebapi.repository.ItemRepository;
 import com.ats.feastwebapi.repository.ItemWithOfferDaywiseRepository;
 import com.ats.feastwebapi.repository.ItemWithOfferRepository;
@@ -86,6 +89,9 @@ public class TransactionRestController {
 	
 	@Autowired
 	ItemWithOfferDaywiseRepository itemWithOfferDaywiseRepository;
+	
+	@Autowired
+	GetBillRepository getBillRepository;
 	
 	
 	@RequestMapping(value = { "/getFreeTableList" }, method = RequestMethod.GET)
@@ -716,5 +722,57 @@ public class TransactionRestController {
 		return dateWiseList;
 
 	}
+	
+	@RequestMapping(value = { "/saveBill" }, method = RequestMethod.POST)
+	public @ResponseBody Bill saveBill(@RequestBody Bill bill) {
+
+		 Bill finalsave = new Bill();
+		try {
+			  
+				 finalsave = billRepository.save(bill); 
+				 List<BillDetails> saveDetail = billDetailsRepository.saveAll(bill.getBillDetails());
+				 finalsave.setBillDetails(saveDetail); 
+				 
+		} catch (Exception e) {
+
+			e.printStackTrace(); 
+
+		}
+		return finalsave;
+
+	}
+	
+	 @RequestMapping(value = { "/getBillHeaderAndDetail" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetBill> getBillHeaderAndDetail(@RequestParam("date") String date,@RequestParam("type")int type) {
+
+		 List<GetBill> getBillHeaderAndDetail = new ArrayList<GetBill>();
+		try {
+			   
+				  getBillHeaderAndDetail = getBillRepository.getBillByDate(date,type); 
+				  
+				  for(int i = 0 ; i<getBillHeaderAndDetail.size() ; i++)
+				  {
+					  List<BillDetails> getDetail = billDetailsRepository.getDetail(getBillHeaderAndDetail.get(i).getBillId());
+					  getBillHeaderAndDetail.get(i).setBillDetails(getDetail);
+					  if(type == 2)
+					  {
+						  String name = getBillRepository.getParcelName(getDetail.get(0).getOrderId());
+						  String mobileNo = getBillRepository.getMobileNo(getDetail.get(0).getOrderId());
+						  getBillHeaderAndDetail.get(i).setName(name);
+						  getBillHeaderAndDetail.get(i).setMobileNo(mobileNo);
+					  }
+				  }
+				   
+				 
+				  
+				 
+		} catch (Exception e) {
+
+			e.printStackTrace(); 
+
+		}
+		return getBillHeaderAndDetail;
+
+	} 
 
 }
