@@ -723,15 +723,60 @@ public class TransactionRestController {
 
 	}
 	
-	@RequestMapping(value = { "/saveBill" }, method = RequestMethod.POST)
-	public @ResponseBody Bill saveBill(@RequestBody Bill bill) {
+	@RequestMapping(value = { "/editBill" }, method = RequestMethod.POST)
+	public @ResponseBody Bill editBill(@RequestBody Bill bill) {
 
 		 Bill finalsave = new Bill();
 		try {
+			List<Item> itemList = itemRepository.findAllByDelStatus(1); 
+			
+			 float grandTotal=0;
+			 float cgst=0;
+			 float sgst=0;
+			 float taxableAmt=0;
+			 float finalTaxAmt=0;
+			 
+			 for(int i = 0; i<bill.getBillDetails().size(); i++)
+			 {
+				 for(int j = 0; j<itemList.size() ; j++)
+				 {
+					 if(bill.getBillDetails().get(i).getItemId() == itemList.get(j).getItemId() && bill.getBillDetails().get(i).getDelStatus()==1)
+					 {
+						   
+						  
+						 float baseRate = ((bill.getBillDetails().get(i).getRate()*100)/((itemList.get(j).getCgst()+itemList.get(j).getSgst())+100));
+						 float value = baseRate*bill.getBillDetails().get(i).getQuantity();
+						 bill.getBillDetails().get(i).setTaxableAmt(value-((bill.getDiscount()/100)*value));
+						 float cgstAmt = (itemList.get(j).getCgst()/100)*bill.getBillDetails().get(i).getTaxableAmt();
+						 float sgstAmt = (itemList.get(j).getSgst()/100)*bill.getBillDetails().get(i).getTaxableAmt();
+						 
+						 bill.getBillDetails().get(i).setTotalTax(cgstAmt+sgstAmt);
+						 bill.getBillDetails().get(i).setSgst(cgstAmt);
+						 bill.getBillDetails().get(i).setCgst(sgstAmt);
+						 bill.getBillDetails().get(i).setTotal(bill.getBillDetails().get(i).getTaxableAmt()+cgstAmt+sgstAmt);  
+						   
+						 grandTotal = grandTotal+(bill.getBillDetails().get(i).getRate()*bill.getBillDetails().get(i).getQuantity());
+						 cgst = cgst+bill.getBillDetails().get(i).getCgst();
+						 sgst = sgst+bill.getBillDetails().get(i).getSgst();
+						 taxableAmt = taxableAmt+bill.getBillDetails().get(i).getTaxableAmt();
+						 finalTaxAmt = finalTaxAmt + bill.getBillDetails().get(i).getTotalTax(); 
+						 break;
+					 }
+				 }
+			 }
+			 
 			  
-				 finalsave = billRepository.save(bill); 
-				 List<BillDetails> saveDetail = billDetailsRepository.saveAll(bill.getBillDetails());
-				 finalsave.setBillDetails(saveDetail); 
+			 bill.setGrandTotal(grandTotal);
+			 bill.setPayableAmt(taxableAmt+finalTaxAmt);
+			 bill.setCgst(cgst);
+			 bill.setSgst(sgst);
+			 bill.setTaxableAmount(taxableAmt);  
+			 System.out.println(bill);
+			 
+			 finalsave = billRepository.save(bill); 
+			 List<BillDetails> saveDetail = billDetailsRepository.saveAll(bill.getBillDetails()); 
+			 List<BillDetails> getDetail = billDetailsRepository.findByBillIdAndDelStatus(bill.getBillId(),1);
+			 finalsave.setBillDetails(getDetail);
 				 
 		} catch (Exception e) {
 

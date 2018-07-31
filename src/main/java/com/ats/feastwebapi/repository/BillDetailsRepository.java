@@ -15,4 +15,7 @@ public interface BillDetailsRepository extends JpaRepository<BillDetails, Intege
 			+ "and bd.del_status = 1 and  m.item_id = bd.item_id", nativeQuery = true)
 	List<BillDetails> getDetail(@Param("billId")int billId);
 
+	List<BillDetails> findByBillIdAndDelStatus(int billId, int i);
+ 
+
 }
