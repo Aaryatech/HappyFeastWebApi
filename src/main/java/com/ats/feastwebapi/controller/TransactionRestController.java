@@ -727,6 +727,7 @@ public class TransactionRestController {
 	public @ResponseBody Bill editBill(@RequestBody Bill bill) {
 
 		 Bill finalsave = new Bill();
+		 System.out.println("BILL : "+bill);
 		try {
 			List<Item> itemList = itemRepository.findAllByDelStatus(1); 
 			
@@ -775,6 +776,10 @@ public class TransactionRestController {
 			 
 			 finalsave = billRepository.save(bill); 
 			 List<BillDetails> saveDetail = billDetailsRepository.saveAll(bill.getBillDetails()); 
+			 
+			 
+			 System.out.println("FINAL SAVE : -------------------------------"+finalsave);
+			 System.out.println("FINAL SAVE DETAIL : -------------------------------"+saveDetail);
 			 List<BillDetails> getDetail = billDetailsRepository.findByBillIdAndDelStatus(bill.getBillId(),1);
 			 finalsave.setBillDetails(getDetail);
 				 
@@ -788,12 +793,12 @@ public class TransactionRestController {
 	}
 	
 	 @RequestMapping(value = { "/getBillHeaderAndDetail" }, method = RequestMethod.POST)
-	public @ResponseBody List<GetBill> getBillHeaderAndDetail(@RequestParam("date") String date,@RequestParam("type")int type) {
+	public @ResponseBody List<GetBill> getBillHeaderAndDetail(@RequestParam("date") String date,@RequestParam("type")int type,@RequestParam("bill_closed")int bill_closed) {
 
 		 List<GetBill> getBillHeaderAndDetail = new ArrayList<GetBill>();
 		try {
 			   
-				  getBillHeaderAndDetail = getBillRepository.getBillByDate(date,type); 
+				  getBillHeaderAndDetail = getBillRepository.getBillByDate(date,type,bill_closed); 
 				  
 				  for(int i = 0 ; i<getBillHeaderAndDetail.size() ; i++)
 				  {
