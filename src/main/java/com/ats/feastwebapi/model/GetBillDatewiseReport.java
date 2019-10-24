@@ -14,6 +14,7 @@ public class GetBillDatewiseReport {
 	private Date billDate; 
 	private float total;
 	private float payableAmount;
+	private int type;
 	
 	
 	public float getTotal() {
@@ -47,11 +48,23 @@ public class GetBillDatewiseReport {
 	public void setPayableAmount(float payableAmount) {
 		this.payableAmount = payableAmount;
 	}
+	
+	
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+	
+	
 
 	@Override
 	public String toString() {
 		return "GetBillDatewiseReport [billId=" + billId + ", billDate=" + billDate + ", total=" + total
-				+ ", payableAmount=" + payableAmount + "]";
+				+ ", payableAmount=" + payableAmount + ", type=" + type + "]";
 	}
 
 	 

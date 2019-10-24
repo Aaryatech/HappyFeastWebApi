@@ -19,8 +19,11 @@ import com.ats.feastwebapi.model.ErrorMessage;
 @RestController
 public class ImageUploadController {
 
-	private static String CATEGORY_URL = "/opt/apache-tomcat-8.5.6/webapps/happyfeast/uploads/category/";
-	private static String ITEM_URL = "/opt/apache-tomcat-8.5.6/webapps/happyfeast/uploads/item/";
+//	private static String CATEGORY_URL = "/opt/apache-tomcat-8.5.6/webapps/happyfeast/uploads/category/";
+//	private static String ITEM_URL = "/opt/apache-tomcat-8.5.6/webapps/happyfeast/uploads/item/";
+
+	private static String CATEGORY_URL = "/apache-tomcat-8.5.6/webapps/happyfeastuploads/category/";
+	private static String ITEM_URL = "/apache-tomcat-8.5.6/webapps/happyfeastuploads/item/";
 
 	@RequestMapping(value = { "/photoUpload" }, method = RequestMethod.POST)
 	public @ResponseBody ErrorMessage getFarmerContract(@RequestParam("file") MultipartFile uploadfile,
